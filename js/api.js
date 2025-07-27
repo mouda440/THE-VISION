@@ -1,5 +1,5 @@
 // API utility for backend integration
-const API_BASE = 'https://back-end-vision.onrender.com';
+const API_BASE = 'https://back-end-vision.onrender.com/api';
 
 // Stocks
 async function fetchStocks() {
