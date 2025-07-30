@@ -86,6 +86,256 @@
         </div>
     </div>
     <script>
+        // Product types configuration
+const productConfig = {
+    tshirt: {
+        attributes: ['color', 'style'],
+        sizes: ['S', 'M', 'L', 'XL'],
+        images: ['Front', 'Back']
+    },
+    jort: {
+        attributes: ['color'],
+        sizes: ['S', 'M', 'L', 'XL'],
+        images: ['Front', 'Back', 'Side']
+    },
+    other: {
+        attributes: [],
+        sizes: ['One Size'],
+        images: ['Main']
+    }
+};
+
+// Render products list
+async function renderProducts() {
+    const products = await fetchProducts();
+    const container = document.getElementById('products-list');
+    
+    if (products.length === 0) {
+        container.innerHTML = '<p>No products found</p>';
+        return;
+    }
+    
+    let html = '';
+    products.forEach(product => {
+        html += `
+        <div class="product-item" style="background:#333; padding:15px; margin-bottom:15px; border-radius:8px;">
+            <h4>${product.name} (${product.type}) - ${product.price} TND</h4>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button class="cta-btn" onclick="editProduct('${product.id}')">Edit</button>
+                <button class="cta-btn" style="background:#fe3130;" onclick="deleteProduct('${product.id}')">Delete</button>
+            </div>
+        </div>`;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Add image field to product form
+function addImageField(name = '', url = '') {
+    const container = document.getElementById('product-images');
+    const index = container.children.length;
+    
+    const html = `
+    <div class="image-field" style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+        <input type="text" placeholder="Image Name" value="${name}" 
+            style="flex:1; padding:8px; border-radius:6px;" id="image-name-${index}">
+        <input type="text" placeholder="Image URL" value="${url}" 
+            style="flex:2; padding:8px; border-radius:6px;" id="image-url-${index}">
+        <button class="cta-btn" style="background:#fe3130; padding:5px 10px;" 
+            onclick="this.parentElement.remove()">Remove</button>
+    </div>`;
+    
+    container.insertAdjacentHTML('beforeend', html);
+}
+
+// Show product form
+function showAddProductForm() {
+    document.getElementById('product-form-title').textContent = 'Add Product';
+    document.getElementById('product-id').value = '';
+    document.getElementById('product-name').value = '';
+    document.getElementById('product-price').value = '';
+    document.getElementById('product-type').value = 'tshirt';
+    
+    // Clear images
+    document.getElementById('product-images').innerHTML = '';
+    addImageField(); // Add one empty image field
+    
+    // Clear stock config
+    document.getElementById('stock-configuration').innerHTML = '';
+    
+    document.getElementById('product-form-container').style.display = 'block';
+}
+
+// Edit existing product
+async function editProduct(id) {
+    const products = await fetchProducts();
+    const product = products.find(p => p.id === id);
+    
+    if (!product) return;
+    
+    document.getElementById('product-form-title').textContent = 'Edit Product';
+    document.getElementById('product-id').value = product.id;
+    document.getElementById('product-name').value = product.name;
+    document.getElementById('product-price').value = product.price;
+    document.getElementById('product-type').value = product.type;
+    
+    // Clear and set images
+    const imagesContainer = document.getElementById('product-images');
+    imagesContainer.innerHTML = '';
+    product.images.forEach(img => {
+        addImageField(img.name, img.url);
+    });
+    
+    // Clear and set stock config
+    const stockContainer = document.getElementById('stock-configuration');
+    stockContainer.innerHTML = generateStockForm(product);
+    
+    document.getElementById('product-form-container').style.display = 'block';
+}
+
+// Generate stock form based on product type
+function generateStockForm(product) {
+    const type = product.type || 'tshirt';
+    const config = productConfig[type];
+    
+    let html = '';
+    
+    if (type === 'tshirt') {
+        html += `<h5>Styles</h5>`;
+        config.styles.forEach(style => {
+            html += `<div style="margin-bottom:15px;">
+                <h6>${style}</h6>`;
+            config.sizes.forEach(size => {
+                const qty = product.stock?.[style]?.[size] || 0;
+                html += `
+                <div style="display:inline-block; margin-right:15px;">
+                    ${size}: <input type="number" min="0" value="${qty}" 
+                        style="width:60px; padding:5px;" 
+                        id="stock-${style}-${size}">
+                </div>`;
+            });
+            html += `</div>`;
+        });
+    } 
+    else if (type === 'jort') {
+        html += `<h5>Colors</h5>`;
+        config.colors.forEach(color => {
+            html += `<div style="margin-bottom:15px;">
+                <h6>${color}</h6>`;
+            config.sizes.forEach(size => {
+                const qty = product.stock?.[color]?.[size] || 0;
+                html += `
+                <div style="display:inline-block; margin-right:15px;">
+                    ${size}: <input type="number" min="0" value="${qty}" 
+                        style="width:60px; padding:5px;" 
+                        id="stock-${color}-${size}">
+                </div>`;
+            });
+            html += `</div>`;
+        });
+    }
+    else {
+        // Other products
+        const qty = product.stock || 0;
+        html += `
+        <div>
+            Quantity: <input type="number" min="0" value="${qty}" 
+                style="width:100px; padding:5px;" id="stock-other">
+        </div>`;
+    }
+    
+    return html;
+}
+
+// Save product
+async function saveProduct() {
+    const id = document.getElementById('product-id').value;
+    const name = document.getElementById('product-name').value;
+    const price = parseFloat(document.getElementById('product-price').value);
+    const type = document.getElementById('product-type').value;
+    
+    // Collect images
+    const images = [];
+    const imageFields = document.querySelectorAll('#product-images .image-field');
+    imageFields.forEach(field => {
+        const name = field.querySelector('input[placeholder="Image Name"]').value;
+        const url = field.querySelector('input[placeholder="Image URL"]').value;
+        if (name && url) images.push({ name, url });
+    });
+    
+    // Collect stock data
+    let stock = {};
+    const config = productConfig[type];
+    
+    if (type === 'tshirt') {
+        config.styles.forEach(style => {
+            stock[style] = {};
+            config.sizes.forEach(size => {
+                const qty = parseInt(document.getElementById(`stock-${style}-${size}`).value) || 0;
+                stock[style][size] = qty;
+            });
+        });
+    } 
+    else if (type === 'jort') {
+        config.colors.forEach(color => {
+            stock[color] = {};
+            config.sizes.forEach(size => {
+                const qty = parseInt(document.getElementById(`stock-${color}-${size}`).value) || 0;
+                stock[color][size] = qty;
+            });
+        });
+    }
+    else {
+        stock = parseInt(document.getElementById('stock-other').value) || 0;
+    }
+    
+    const product = {
+        id, name, price, type, images, stock
+    };
+    
+    // Save to backend
+    await saveProductAPI(product);
+    
+    // Refresh UI
+    document.getElementById('product-form-container').style.display = 'none';
+    renderProducts();
+}
+
+// Delete product
+async function deleteProduct(id) {
+    if (confirm('Are you sure you want to delete this product?')) {
+        await deleteProductAPI(id);
+        renderProducts();
+    }
+}
+
+// API functions
+async function fetchProducts() {
+    const res = await fetch(`${API_BASE}/products`);
+    return await res.json();
+}
+
+async function saveProductAPI(product) {
+    const res = await fetch(`${API_BASE}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product)
+    });
+    return await res.json();
+}
+
+async function deleteProductAPI(id) {
+    const res = await fetch(`${API_BASE}/products/${id}`, {
+        method: 'DELETE'
+    });
+    return await res.json();
+}
+
+// Initialize on admin login
+async function adminLogin() {
+    // ... existing code ...
+    renderProducts(); // Add this
+}
     // --- Simple credential storage ---
     function getAdminCredentials() {
         return JSON.parse(localStorage.getItem('adminCredentials') || '{"username":"admin","password":"vision2025"}');
@@ -217,5 +467,51 @@
     }
     </script>
     <script src="js/api.js"></script>
+    <section>
+    <h2>Manage Products</h2>
+    <button class="cta-btn" onclick="showAddProductForm()">Add New Product</button>
+    <div id="products-list" style="margin-top: 20px;"></div>
+</section>
+
+<!-- Product Form (initially hidden) -->
+<div id="product-form-container" style="display:none; background:#222; padding:20px; border-radius:12px; margin-top:20px;">
+    <h3 id="product-form-title">Add Product</h3>
+    <input type="hidden" id="product-id">
+    
+    <div style="margin-bottom:15px;">
+        <label>Product Name</label>
+        <input type="text" id="product-name" style="width:100%; padding:8px; border-radius:6px;">
+    </div>
+    
+    <div style="margin-bottom:15px;">
+        <label>Price (TND)</label>
+        <input type="number" id="product-price" style="width:100%; padding:8px; border-radius:6px;">
+    </div>
+    
+    <div style="margin-bottom:15px;">
+        <label>Type</label>
+        <select id="product-type" style="width:100%; padding:8px; border-radius:6px;">
+            <option value="tshirt">T-shirt</option>
+            <option value="jort">Jort</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    
+    <h4>Images</h4>
+    <div id="product-images" style="margin-bottom:20px;">
+        <!-- Dynamic image fields will appear here -->
+    </div>
+    <button type="button" class="cta-btn" onclick="addImageField()">Add Image</button>
+    
+    <h4>Stock Configuration</h4>
+    <div id="stock-configuration">
+        <!-- Dynamic stock fields will appear here -->
+    </div>
+    
+    <div style="margin-top:20px; display:flex; gap:10px;">
+        <button class="cta-btn" onclick="saveProduct()">Save Product</button>
+        <button class="cta-btn" style="background:#444;" onclick="cancelProductEdit()">Cancel</button>
+    </div>
+</div>
 </body>
 </html>
