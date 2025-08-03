@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - THE VISION</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="hero">
+        <img src="img/logo.jpg" alt="THE VISION Logo" class="hero-logo">
+        <h1 class="hero-title" id="product-title">Product</h1>
+        <div class="hero-cart-link">
+            <a href="cart.html" class="cta-btn">Cart</a>
+        </div>
+    </header>
+    <main style="margin-bottom:0;">
+        <section>
+            <div style="text-align:center;margin:38px 0 38px 0;">
+                <a href="shopping.html" class="cta-btn">Back to Shop</a>
+            </div>
+            <div class="product" id="product-container" style="text-align:center;background:#181818;color:#fff;padding:38px 0 32px 0;border-radius:18px;max-width:480px;margin:auto;box-shadow:0 2px 18px #0002; margin-bottom:0;">
+                <!-- Product details will be rendered here -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 the vision</p>
+    </footer>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    async function renderProduct() {
+        // Fetch latest products and stocks for up-to-date info
+        let products = [];
+        let stocks = {};
+        try {
+            products = await fetchProducts();
+            stocks = await fetchStocks();
+        } catch (e) {}
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const product = products.find(p => p.id === id);
+        if (!product) {
+            document.getElementById('product-container').innerHTML = '<p>Product not found.</p>';
+            return;
+        }
+        document.getElementById('product-title').textContent = product.name;
+
+        // --- Style selector logic ---
+        let styles = [];
+        if (product.styles && Array.isArray(product.styles) && product.styles.length > 1) {
+            styles = product.styles;
+        } else if (product.type === 'tshirt') {
+            styles = [
+                { value: 'grey-black', label: 'Grey on Black' },
+                { value: 'white-black', label: 'White on Black' },
+                { value: 'white-red', label: 'White on Red' }
+            ];
+        }
+        let selectedStyle = styles.length > 0 ? styles[0].value : null;
+
+        // --- Dynamic image selection logic ---
+        let images = [];
+        if (Array.isArray(product.images) && product.images.length > 0) {
+            images = product.images.map(img => ({
+                name: img.name || 'Image',
+                style: img.style || null,
+                url: (/^https?:\/\//.test(img.url) || img.url.startsWith('img/')) ? img.url : 'img/' + img.url.replace(/^\.?\/*/, '')
+            }));
+        } else if (product.type === 'tshirt') {
+            images = [
+                { name: 'Front', style: 'grey-black', url: 'img/front black.jpg' },
+                { name: 'Back', style: 'grey-black', url: 'img/back grey-black.jpg' },
+                { name: 'Front', style: 'white-black', url: 'img/front black.jpg' },
+                { name: 'Back', style: 'white-black', url: 'img/back black-white.jpg' },
+                { name: 'Front', style: 'white-red', url: 'img/front red.jpg' },
+                { name: 'Back', style: 'white-red', url: 'img/back red-white.jpg' }
+            ];
+        } else if (product.type === 'jort') {
+            images = [
+                { name: 'Front', url: 'img/jort front.jpg' },
+                { name: 'Back', url: 'img/jort back.jpg' }
+            ];
+        }
+
+        // Filter images by selected style
+        function getImagesForStyle(style) {
+            let filtered = images.filter(img => img.style === style);
+            if (filtered.length === 0) {
+                filtered = images.filter(img => !img.style);
+            }
+            return filtered;
+        }
+        let currentImgIdx = 0;
+        let filteredImages = getImagesForStyle(selectedStyle);
+
+        // --- Size selector logic ---
+        // For T-shirt, use nested stock structure: stock[style][size]
+        let sizes = [];
+        if (product.type === 'tshirt' && product.stock && selectedStyle && product.stock[selectedStyle]) {
+            sizes = Object.keys(product.stock[selectedStyle]);
+        } else if (product.stock) {
+            sizes = Object.keys(product.stock);
+        }
+        let selectedSize = sizes.length > 0 ? sizes[0] : null;
+
+        // --- Render HTML ---
+        let html = '';
+        if (styles.length > 1) {
+            html += `<div class="style-selector" id="style-selector" style="margin-bottom:12px;">`;
+            styles.forEach((opt, idx) => {
+                html += `<button type="button" class="style-option${idx === 0 ? ' selected' : ''}" data-style="${opt.value}">${opt.label}</button>`;
+            });
+            html += `</div>`;
+        }
+        html += `
+            <div id="product-image-area">
+                <img id="productImg" src="${filteredImages[currentImgIdx]?.url || 'img/logo.jpg'}" alt="${filteredImages[currentImgIdx]?.name || ''}" style="width:280px;margin-bottom:18px;" onerror="this.src='img/logo.jpg'">
+                <div id="img-toggle-area" style="margin-top:12px;display:flex;justify-content:center;gap:18px;">
+        `;
+        filteredImages.forEach((imgObj, idx) => {
+            html += `<button type="button" class="img-toggle-btn${idx === 0 ? ' selected' : ''}" data-idx="${idx}">${imgObj.name}</button>`;
+        });
+        html += `<span id="img-label" style="margin-left:18px;font-weight:600;">${filteredImages[currentImgIdx]?.name || ''}</span>`;
+        html += `
+                </div>
+            </div>
+            <h3>${product.name}</h3>
+            <div style="margin-bottom:12px;">
+                <span class="price" style="font-size:1.2em;font-weight:500;">${product.price} TND</span>
+            </div>
+        `;
+        // --- Size selector UI ---
+        if (sizes.length > 0) {
+            html += `<div style="margin-bottom:12px;">
+                <label style="font-weight:500;">Size:</label>
+                <div class="size-selector" id="size-selector">`;
+            sizes.forEach((size, idx) => {
+                html += `<button type="button" class="size-option${idx === 0 ? ' selected' : ''}" data-size="${size}">${size}</button>`;
+            });
+            html += `</div>
+                <input type="hidden" id="size" name="size" value="${selectedSize}">
+            </div>`;
+        }
+        html += `<div style="margin:16px 0;">
+            <button class="cta-btn" id="buy-btn">Buy</button>
+            <span id="stock-warning" style="display:block;margin-top:8px;color:#fe3130;font-weight:600;"></span>
+        </div>`;
+        document.getElementById('product-container').innerHTML = html;
+
+        // --- Style selector logic ---
+        if (styles.length > 1) {
+            const styleSelector = document.getElementById('style-selector');
+            styleSelector.querySelectorAll('.style-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    styleSelector.querySelectorAll('.style-option').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedStyle = this.getAttribute('data-style');
+                    // Update images for selected style
+                    filteredImages = getImagesForStyle(selectedStyle);
+                    currentImgIdx = 0;
+                    // Update image area
+                    const productImg = document.getElementById('productImg');
+                    productImg.src = filteredImages[0]?.url || 'img/logo.jpg';
+                    productImg.alt = filteredImages[0]?.name || '';
+                    document.getElementById('img-label').textContent = filteredImages[0]?.name || '';
+                    // Update image toggle buttons
+                    const imgToggleArea = document.getElementById('img-toggle-area');
+                    imgToggleArea.innerHTML = '';
+                    filteredImages.forEach((imgObj, idx) => {
+                        imgToggleArea.innerHTML += `<button type="button" class="img-toggle-btn${idx === 0 ? ' selected' : ''}" data-idx="${idx}">${imgObj.name}</button>`;
+                    });
+                    imgToggleArea.innerHTML += `<span id="img-label" style="margin-left:18px;font-weight:600;">${filteredImages[0]?.name || ''}</span>`;
+                    attachImageToggleLogic();
+                    // Update sizes for selected style
+                    if (product.type === 'tshirt' && product.stock && product.stock[selectedStyle]) {
+                        sizes = Object.keys(product.stock[selectedStyle]);
+                        selectedSize = sizes[0];
+                        const sizeSelector = document.getElementById('size-selector');
+                        sizeSelector.innerHTML = '';
+                        sizes.forEach((size, idx) => {
+                            sizeSelector.innerHTML += `<button type="button" class="size-option${idx === 0 ? ' selected' : ''}" data-size="${size}">${size}</button>`;
+                        });
+                        document.getElementById('size').value = selectedSize;
+                        attachSizeToggleLogic();
+                    }
+                    updateWarning();
+                });
+            });
+        }
+
+        // --- Image toggle logic ---
+        function attachImageToggleLogic() {
+            const productImg = document.getElementById('productImg');
+            const imgLabelSpan = document.getElementById('img-label');
+            const imgToggleBtns = document.querySelectorAll('#img-toggle-area .img-toggle-btn');
+            imgToggleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    imgToggleBtns.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const idx = parseInt(this.getAttribute('data-idx'), 10);
+                    productImg.src = filteredImages[idx]?.url || 'img/logo.jpg';
+                    productImg.alt = filteredImages[idx]?.name || '';
+                    imgLabelSpan.textContent = filteredImages[idx]?.name || '';
+                });
+            });
+        }
+        attachImageToggleLogic();
+
+        // --- Size selector logic ---
+        function attachSizeToggleLogic() {
+            const selector = document.getElementById('size-selector');
+            const hiddenInput = document.getElementById('size');
+            selector.querySelectorAll('.size-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selector.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    hiddenInput.value = this.getAttribute('data-size');
+                    selectedSize = this.getAttribute('data-size');
+                    updateWarning();
+                });
+            });
+            selector.querySelector('.size-option[data-size="' + selectedSize + '"]').classList.add('selected');
+        }
+        if (sizes.length > 0) attachSizeToggleLogic();
+
+        // --- Stock warning logic ---
+        async function updateWarning() {
+            let stock = null;
+            if (product.type === 'tshirt' && selectedStyle && selectedSize) {
+                if (stocks.tshirt && stocks.tshirt[selectedStyle] && stocks.tshirt[selectedStyle][selectedSize] !== undefined) {
+                    stock = stocks.tshirt[selectedStyle][selectedSize];
+                } else if (product.stock && product.stock[selectedStyle] && product.stock[selectedStyle][selectedSize] !== undefined) {
+                    stock = product.stock[selectedStyle][selectedSize];
+                }
+            } else if (product.type === 'jort' && stocks.jort && selectedSize) {
+                if (stocks.jort[selectedSize] !== undefined) {
+                    stock = stocks.jort[selectedSize];
+                }
+            } else if (product.stock && selectedSize) {
+                stock = product.stock[selectedSize];
+            }
+            if (stock === null) stock = 0;
+            document.getElementById('stock-warning').textContent = stock === 0 ? 'Out of stock' : (stock <= 30 ? 'Last pieces!' : '');
+        }
+        updateWarning();
+
+        // --- Buy button logic ---
+        document.getElementById('buy-btn').onclick = async function() {
+            let stock = null;
+            if (product.type === 'tshirt' && selectedStyle && selectedSize) {
+                if (stocks.tshirt && stocks.tshirt[selectedStyle] && stocks.tshirt[selectedStyle][selectedSize] !== undefined) {
+                    stock = stocks.tshirt[selectedStyle][selectedSize];
+                } else if (product.stock && product.stock[selectedStyle] && product.stock[selectedStyle][selectedSize] !== undefined) {
+                    stock = product.stock[selectedStyle][selectedSize];
+                }
+            } else if (product.type === 'jort' && stocks.jort && selectedSize) {
+                if (stocks.jort[selectedSize] !== undefined) {
+                    stock = stocks.jort[selectedSize];
+                }
+            } else if (product.stock && selectedSize) {
+                stock = product.stock[selectedSize];
+            }
+            if (stock === null) stock = 0;
+            if (stock <= 0) {
+                alert('Out of stock!');
+                return;
+            }
+            const item = {
+                name: product.name + (selectedStyle ? ` (${selectedStyle})` : '') + (selectedSize ? ` (Size: ${selectedSize})` : ''),
+                price: product.price,
+                img: (filteredImages[0]?.url || 'img/logo.jpg'),
+                type: product.type,
+                style: selectedStyle,
+                size: selectedSize
+            };
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push(item);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'cart.html';
+        };
+    }
+    document.addEventListener('DOMContentLoaded', renderProduct);
+    </script>
+</body>
+</html>

@@ -20,227 +20,231 @@
             <div style="text-align:center;margin:38px 0 38px 0;">
                 <a href="shopping.html" class="cta-btn">Back to Shop</a>
             </div>
-            <div class="product" style="text-align:center;background:#181818;color:#fff;padding:38px 0 32px 0;border-radius:18px;max-width:480px;margin:auto;box-shadow:0 2px 18px #0002;">
-                <h3>T-shirt</h3>
-                <label for="color">Color:</label>
-                <select id="color" class="color-select-custom" onchange="updateStyles()">
-                    <option value="black">Black</option>
-                    <option value="red">Red</option>
-                </select>
-                <label style="font-weight:500;">Style:</label>
-<div class="style-selector" id="style-selector" style="margin-bottom:12px;"></div>
-<input type="hidden" id="style" name="style" value="grey-black">
-<script>
-// Dynamic style selector logic for tshirt
-(function(){
-    const styleOptions = {
-        black: [
-            { value: 'grey-black', label: 'Grey on Black' },
-            { value: 'white-black', label: 'White on Black' }
-        ],
-        red: [
-            { value: 'white-red', label: 'White on Red' }
-        ]
-    };
-    const selector = document.getElementById('style-selector');
-    const hiddenInput = document.getElementById('style');
-    const colorSelect = document.getElementById('color');
-    function renderStyleButtons(color) {
-        selector.innerHTML = '';
-        const options = styleOptions[color] || styleOptions.black;
-        options.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'style-option' + (idx === 0 ? ' selected' : '');
-            btn.setAttribute('data-style', opt.value);
-            btn.textContent = opt.label;
-            btn.addEventListener('click', function() {
-                selector.querySelectorAll('.style-option').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                hiddenInput.value = this.getAttribute('data-style');
-hiddenInput.dispatchEvent(new Event('change'));
-                if(typeof updateImages === 'function'){updateImages();}
-                if(typeof updateWarning === 'function'){updateWarning();}
-            });
-            selector.appendChild(btn);
-        });
-        // Set value
-        hiddenInput.value = options[0].value;
-        if(typeof updateImages === 'function'){updateImages();}
-        if(typeof updateWarning === 'function'){updateWarning();}
-    }
-    colorSelect.addEventListener('change', function() {
-        renderStyleButtons(this.value);
-    });
-    // Initial render
-    renderStyleButtons(colorSelect.value);
-})();
-</script>
-                <div style="margin-bottom:12px;">
-                    <label style="font-weight:500;">Size:</label>
-                    <div class="size-selector" id="size-selector">
-                        <button type="button" class="size-option" data-size="S">S</button>
-                        <button type="button" class="size-option" data-size="M">M</button>
-                        <button type="button" class="size-option" data-size="L">L</button>
-                        <button type="button" class="size-option" data-size="XL">XL</button>
-                    </div>
-                    <input type="hidden" id="size" name="size" value="S">
-                </div>
-<script>
-(function(){
-    const selector = document.getElementById('size-selector');
-    const hiddenInput = document.getElementById('size');
-    selector.querySelectorAll('.size-option').forEach(btn => {
-        btn.addEventListener('click', function() {
-            selector.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-            hiddenInput.value = this.getAttribute('data-size');
-            hiddenInput.dispatchEvent(new Event('change'));
-            if(typeof updateWarning === 'function'){updateWarning();}
-        });
-    });
-    // Set default selected
-    selector.querySelector('.size-option[data-size="S"]').classList.add('selected');
-})();
-</script>
-                <div id="images" style="margin-top:16px;">
-    <img id="productImg" src="img/front black.jpg" alt="Front" style="width:280px;">
-    <div style="margin-top:12px;display:flex;justify-content:center;gap:18px;">
-        <button type="button" class="img-toggle-btn selected" id="showFront">Front</button>
-        <button type="button" class="img-toggle-btn" id="showBack">Back</button>
-    </div>
-</div>
-<script>
-(function(){
-    const productImg = document.getElementById('productImg');
-    const showFront = document.getElementById('showFront');
-    const showBack = document.getElementById('showBack');
-    let frontSrc = 'img/front black.jpg';
-    let backSrc = 'img/back grey-black.jpg';
-    let frontAlt = 'Front';
-    let backAlt = 'Back';
-    function updateImageSources() {
-        // Update sources based on color/style selection
-        const color = document.getElementById('color').value;
-        const style = document.getElementById('style').value;
-        if (color === 'red') {
-            frontSrc = 'img/front red.jpg';
-            backSrc = 'img/back red-white.jpg';
-            frontAlt = 'Front Red';
-            backAlt = 'Back White on Red';
-        } else if (style === 'grey-black') {
-            frontSrc = 'img/front black.jpg';
-            backSrc = 'img/back grey-black.jpg';
-            frontAlt = 'Front Black';
-            backAlt = 'Back Grey on Black';
-        } else if (style === 'white-black') {
-            frontSrc = 'img/front black.jpg';
-            backSrc = 'img/back black-white.jpg';
-            frontAlt = 'Front Black';
-            backAlt = 'Back White on Black';
-        }
-    }
-    function showFrontImg() {
-        updateImageSources();
-        productImg.src = frontSrc;
-        productImg.alt = frontAlt;
-        showFront.classList.add('selected');
-        showBack.classList.remove('selected');
-    }
-    function showBackImg() {
-        updateImageSources();
-        productImg.src = backSrc;
-        productImg.alt = backAlt;
-        showFront.classList.remove('selected');
-        showBack.classList.add('selected');
-    }
-    showFront.addEventListener('click', showFrontImg);
-    showBack.addEventListener('click', showBackImg);
-    document.getElementById('color').addEventListener('change', function(){
-        if (showFront.classList.contains('selected')) showFrontImg();
-        else showBackImg();
-    });
-    document.getElementById('style').addEventListener('change', function(){
-        if (showFront.classList.contains('selected')) showFrontImg();
-        else showBackImg();
-    });
-    // Default to front
-    showFrontImg();
-})();
-</script>
-                <div style="margin:16px 0;">
-                    <button class="cta-btn" onclick="addToCart()">Buy</button>
-                    <span class="price" style="font-size:1.2em;font-weight:500;margin-left:16px;">120 TND</span>
-                    <span id="stock-warning" style="display:block;margin-top:8px;color:#fe3130;font-weight:600;"></span>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    async function updateWarning() {
-        let stocks = {};
-        if (window.fetchStocks) {
-            stocks = await window.fetchStocks();
-        } else if (window.api && window.api.fetchStocks) {
-            stocks = await window.api.fetchStocks();
-        }
-        const style = document.getElementById('style').value;
-        const size = document.getElementById('size').value;
-        let stock = stocks?.tshirt?.[style]?.[size] ?? 0;
-        document.getElementById('stock-warning').textContent = stock === 0 ? 'Out of stock' : (stock <= 30 ? 'Last pieces!' : '');
-    }
-    updateWarning();
-    document.getElementById('style').addEventListener('change', updateWarning);
-    document.getElementById('size').addEventListener('change', updateWarning);
-});
-</script>
-                </div>
+            <div class="product" id="tshirt-product-container" style="text-align:center;background:#181818;color:#fff;padding:38px 0 32px 0;border-radius:18px;max-width:480px;margin:auto;box-shadow:0 2px 18px #0002;">
+                <!-- Dynamic T-shirt product will be rendered here -->
+            </div>
+            <div style="margin-bottom:12px;">
+                <span class="price" id="product-price" style="font-size:1.2em;font-weight:500;margin-left:16px;">120 TND</span>
+                <span id="stock-warning" style="display:block;margin-top:8px;color:#fe3130;font-weight:600;"></span>
             </div>
         </section>
     </main>
     <footer>
         <p>&copy; 2025 the vision</p>
     </footer>
-    <script>
-    function updateStyles() {
-        const color = document.getElementById('color').value;
-        const styleSelect = document.getElementById('style');
-        styleSelect.innerHTML = '';
-        if (color === 'red') {
-            styleSelect.innerHTML = '<option value="white-red">White on Red</option>';
-        } else {
-            styleSelect.innerHTML = 
-                '<option value="grey-black">Grey on Black</option>' +
-                '<option value="white-black">White on Black</option>';
-        }
-        updateImages();
-    }
-    function updateImages() {
-        const color = document.getElementById('color').value;
-        const style = document.getElementById('style').value;
-        const frontImg = document.getElementById('frontImg');
-        const backImg = document.getElementById('backImg');
-        if (color === 'red') {
-            frontImg.src = 'img/front red.jpg';
-            backImg.src = 'img/back red-white.jpg';
-            frontImg.alt = 'Front Red';
-            backImg.alt = 'Back White on Red';
-        } else if (style === 'grey-black') {
-            frontImg.src = 'img/front black.jpg';
-            backImg.src = 'img/back grey-black.jpg';
-            frontImg.alt = 'Front Black';
-            backImg.alt = 'Back Grey on Black';
-        } else if (style === 'white-black') {
-            frontImg.src = 'img/front black.jpg';
-            backImg.src = 'img/back black-white.jpg';
-            frontImg.alt = 'Front Black';
-            backImg.alt = 'Back White on Black';
-        }
-    }
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        updateStyles();
-    });
-    </script>
-<script src="js/main.js"></script>
     <script src="js/api.js"></script>
+    <script>
+    async function renderTshirtProduct() {
+        let products = [];
+        try {
+            products = await fetchProducts();
+        } catch (e) {}
+        const product = products.find(p => p.type === 'tshirt');
+        if (!product) {
+            document.getElementById('tshirt-product-container').innerHTML = '<p>T-shirt not found.</p>';
+            return;
+        }
+
+        // Styles
+        const styles = product.styles && product.styles.length > 0
+            ? product.styles
+            : [
+                { value: 'grey-black', label: 'Grey on Black' },
+                { value: 'white-black', label: 'White on Black' },
+                { value: 'white-red', label: 'White on Red' }
+            ];
+        let selectedStyle = styles[0].value;
+
+        // Sizes
+        const sizes = product.stock && product.stock[selectedStyle]
+            ? Object.keys(product.stock[selectedStyle])
+            : ['S', 'M', 'L', 'XL'];
+        let selectedSize = sizes[0];
+
+        // Images
+        function getImagesForStyle(style) {
+            return (product.images || []).filter(img => img.style === style)
+                .map(img => ({
+                    name: img.name || 'Image',
+                    url: (/^https?:\/\//.test(img.url) || img.url.startsWith('img/')) ? img.url : 'img/' + img.url.replace(/^\.?\/*/, '')
+                }));
+        }
+        let filteredImages = getImagesForStyle(selectedStyle);
+        if (filteredImages.length === 0) {
+            // Fallback to default images
+            filteredImages = [
+                { name: 'Front', url: 'img/front black.jpg' },
+                { name: 'Back', url: 'img/back grey-black.jpg' }
+            ];
+        }
+        let currentImgIdx = 0;
+
+        // Render HTML
+        let html = `
+            <h3 id="product-title">${product.name}</h3>
+            <div class="style-selector" id="style-selector" style="margin-bottom:12px;">
+        `;
+        styles.forEach((opt, idx) => {
+            html += `<button type="button" class="style-option${idx === 0 ? ' selected' : ''}" data-style="${opt.value}">${opt.label}</button>`;
+        });
+        html += `</div>
+            <div style="margin-bottom:12px;">
+                <label style="font-weight:500;">Size:</label>
+                <div class="size-selector" id="size-selector">
+        `;
+        sizes.forEach((size, idx) => {
+            html += `<button type="button" class="size-option${idx === 0 ? ' selected' : ''}" data-size="${size}">${size}</button>`;
+        });
+        html += `</div>
+                <input type="hidden" id="size" name="size" value="${selectedSize}">
+            </div>
+            <div id="product-image-area">
+                <img id="productImg" src="${filteredImages[currentImgIdx].url}" alt="${filteredImages[currentImgIdx].name}" style="width:280px;margin-bottom:18px;" onerror="this.src='img/logo.jpg'">
+                <div id="img-toggle-area" style="margin-top:12px;display:flex;justify-content:center;gap:18px;">
+        `;
+        filteredImages.forEach((imgObj, idx) => {
+            html += `<button type="button" class="img-toggle-btn${idx === 0 ? ' selected' : ''}" data-idx="${idx}">${imgObj.name}</button>`;
+        });
+        html += `<span id="img-label" style="margin-left:18px;font-weight:600;">${filteredImages[currentImgIdx].name}</span>`;
+        html += `
+                </div>
+            </div>
+            <div style="margin:16px 0;">
+                <button class="cta-btn" id="buy-btn">Buy</button>
+            </div>
+        `;
+        document.getElementById('tshirt-product-container').innerHTML = html;
+
+        // Style selector logic
+        const styleSelector = document.getElementById('style-selector');
+        styleSelector.querySelectorAll('.style-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                styleSelector.querySelectorAll('.style-option').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedStyle = this.getAttribute('data-style');
+                // Update sizes
+                const newSizes = product.stock[selectedStyle] ? Object.keys(product.stock[selectedStyle]) : sizes;
+                selectedSize = newSizes[0];
+                // Update size selector
+                const sizeSelector = document.getElementById('size-selector');
+                sizeSelector.innerHTML = '';
+                newSizes.forEach((size, idx) => {
+                    sizeSelector.innerHTML += `<button type="button" class="size-option${idx === 0 ? ' selected' : ''}" data-size="${size}">${size}</button>`;
+                });
+                document.getElementById('size').value = selectedSize;
+                // Attach size selector logic
+                sizeSelector.querySelectorAll('.size-option').forEach(btn2 => {
+                    btn2.addEventListener('click', function() {
+                        sizeSelector.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedSize = this.getAttribute('data-size');
+                        document.getElementById('size').value = selectedSize;
+                        updateWarning();
+                    });
+                });
+                // Update images
+                filteredImages = getImagesForStyle(selectedStyle);
+                if (filteredImages.length === 0) {
+                    filteredImages = [
+                        { name: 'Front', url: 'img/front black.jpg' },
+                        { name: 'Back', url: 'img/back grey-black.jpg' }
+                    ];
+                }
+                currentImgIdx = 0;
+                const productImg = document.getElementById('productImg');
+                productImg.src = filteredImages[0].url;
+                productImg.alt = filteredImages[0].name;
+                document.getElementById('img-label').textContent = filteredImages[0].name;
+                // Update image toggle buttons
+                const imgToggleArea = document.getElementById('img-toggle-area');
+                imgToggleArea.innerHTML = '';
+                filteredImages.forEach((imgObj, idx) => {
+                    imgToggleArea.innerHTML += `<button type="button" class="img-toggle-btn${idx === 0 ? ' selected' : ''}" data-idx="${idx}">${imgObj.name}</button>`;
+                });
+                imgToggleArea.innerHTML += `<span id="img-label" style="margin-left:18px;font-weight:600;">${filteredImages[0].name}</span>`;
+                attachImageToggleLogic();
+                updateWarning();
+            });
+        });
+
+        // Size selector logic
+        const sizeSelector = document.getElementById('size-selector');
+        sizeSelector.querySelectorAll('.size-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                sizeSelector.querySelectorAll('.size-option').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedSize = this.getAttribute('data-size');
+                document.getElementById('size').value = selectedSize;
+                updateWarning();
+            });
+        });
+
+        // Image toggle logic
+        function attachImageToggleLogic() {
+            const productImg = document.getElementById('productImg');
+            const imgLabelSpan = document.getElementById('img-label');
+            const imgToggleBtns = document.querySelectorAll('#img-toggle-area .img-toggle-btn');
+            imgToggleBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    imgToggleBtns.forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const idx = parseInt(this.getAttribute('data-idx'), 10);
+                    productImg.src = filteredImages[idx].url;
+                    productImg.alt = filteredImages[idx].name;
+                    imgLabelSpan.textContent = filteredImages[idx].name;
+                });
+            });
+        }
+        attachImageToggleLogic();
+
+        // Stock warning logic
+        async function updateWarning() {
+            let stocks = {};
+            try {
+                stocks = await fetchStocks();
+            } catch (e) {}
+            let stock = 0;
+            if (stocks.tshirt && stocks.tshirt[selectedStyle] && stocks.tshirt[selectedStyle][selectedSize] !== undefined) {
+                stock = stocks.tshirt[selectedStyle][selectedSize];
+            } else if (product.stock && product.stock[selectedStyle] && product.stock[selectedStyle][selectedSize] !== undefined) {
+                stock = product.stock[selectedStyle][selectedSize];
+            }
+            document.getElementById('stock-warning').textContent = stock === 0 ? 'Out of stock' : (stock <= 30 ? 'Last pieces!' : '');
+        }
+        updateWarning();
+
+        // Buy button logic
+        document.getElementById('buy-btn').onclick = async function() {
+            let stocks = {};
+            try {
+                stocks = await fetchStocks();
+            } catch (e) {}
+            let stock = 0;
+            if (stocks.tshirt && stocks.tshirt[selectedStyle] && stocks.tshirt[selectedStyle][selectedSize] !== undefined) {
+                stock = stocks.tshirt[selectedStyle][selectedSize];
+            } else if (product.stock && product.stock[selectedStyle] && product.stock[selectedStyle][selectedSize] !== undefined) {
+                stock = product.stock[selectedStyle][selectedSize];
+            }
+            if (stock <= 0) {
+                alert('Out of stock!');
+                return;
+            }
+            const item = {
+                name: `${product.name} (${selectedStyle}, Size: ${selectedSize})`,
+                price: product.price,
+                img: filteredImages[0].url,
+                type: 'tshirt',
+                style: selectedStyle,
+                size: selectedSize
+            };
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push(item);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'cart.html';
+        };
+    }
+    document.addEventListener('DOMContentLoaded', renderTshirtProduct);
+    </script>
     <script src="js/main.js"></script>
 </body>
 </html>

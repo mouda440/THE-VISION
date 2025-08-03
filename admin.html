@@ -5,38 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - THE VISION</title>
     <link rel="stylesheet" href="css/styles.css">
-
     <style>
-    /* Updated styles for fixed footer */
-    #admin-content {
-        position: relative;
-        min-height: 100vh;
-        padding-bottom: 180px; /* Increased space for footer + buttons */
-    }
-    
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 10px 0;
-        background: #000000;
-        text-align: center;
-        z-index: 100;
-        height: 60px; /* Fixed height */
-    }
-    
-    .credentials-container {
-        position: relative; /* Changed from fixed */
-        margin: 32px 0;
-        text-align: center;
-    }
-    
-    /* Add padding to the main content */
-    main {
-        padding-bottom: 80px; /* Space for footer */
-    }
-</style>
+        #admin-content { position: relative; min-height: 100vh; padding-bottom: 180px; }
+        footer { position: fixed; bottom: 0; left: 0; right: 0; padding: 10px 0; background: #000; text-align: center; z-index: 100; height: 60px; }
+        .credentials-container { margin: 32px 0 0 0; text-align: center; }
+        main { padding-bottom: 60px; }
+        #product-form-container { background: #222; padding: 20px; border-radius: 12px; margin-top: 20px; display: none; }
+        @media (max-width: 768px) { #admin-content { padding-bottom: 220px; } footer { height: 80px; } }
+    </style>
 </head>
 <body>
     <div id="login-area" class="admin-login-area">
@@ -59,13 +35,7 @@
             <h1 class="hero-title">Admin Panel</h1>
             <p class="hero-tag">Manage THE VISION with confidence.</p>
         </header>
-         <div class="credentials-container">
-        <button class="cta-btn" onclick="showChangeCredentials()">Change Username/Password</button>
-        <div id="change-credentials-area" style="display:none; background:#222; padding:20px; border-radius:12px; width:250px; margin:10px auto 0 auto;">
-            <!-- Existing credentials form... -->
-        </div>
-    </div>
-</main>
+        <main>
             <section>
                 <h2>All Orders</h2>
                 <div id="orders-list"></div>
@@ -78,286 +48,308 @@
                 <div id="jort-stock-inputs"></div>
                 <button class="cta-btn" onclick="setAdminStocks()">Save Stocks</button>
             </section>
+            <section>
+                <h2>Manage Products</h2>
+                <button class="cta-btn" onclick="showAddProductForm()">Add New Product</button>
+                <div id="products-list" style="margin-top: 20px;"></div>
+                <div id="product-form-container">
+                    <h3 id="product-form-title">Add Product</h3>
+                    <input type="hidden" id="product-id">
+                    <div style="margin-bottom:15px;">
+                        <label>Product Name</label>
+                        <input type="text" id="product-name" style="width:100%; padding:8px; border-radius:6px;">
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Price (TND)</label>
+                        <input type="number" id="product-price" style="width:100%; padding:8px; border-radius:6px;">
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Type</label>
+                        <input type="text" id="product-type" style="width:100%; padding:8px; border-radius:6px;" placeholder="Type (e.g. tshirt, jort, etc)">
+                    </div>
+                    <h4>Styles</h4>
+                    <div id="product-styles" style="margin-bottom:20px;"></div>
+                    <button type="button" class="cta-btn" onclick="addStyleField()">Add Style</button>
+                    <h4>Images</h4>
+                    <div id="product-images" style="margin-bottom:20px;"></div>
+                    <button type="button" class="cta-btn" onclick="addImageField()">Add Image</button>
+                    <h4>Stock Per Size</h4>
+                    <div id="stock-configuration"></div>
+                    <div style="margin-top:20px; display:flex; gap:10px;">
+                        <button class="cta-btn" onclick="saveProduct()">Save Product</button>
+                        <button class="cta-btn" style="background:#444;" onclick="cancelProductEdit()">Cancel</button>
+                    </div>
+                </div>
+            </section>
+            <div class="credentials-container">
+                <button class="cta-btn" onclick="showChangeCredentials()">Change Username/Password</button>
+                <div id="change-credentials-area" style="display:none; background:#222; padding:20px; border-radius:12px; width:250px; margin:10px auto 0 auto;">
+                    <h3>Change Credentials</h3>
+                    <input type="text" id="new-username" placeholder="New Username" style="margin-bottom:12px;width:100%;padding:8px;border-radius:6px;border:1px solid #444;">
+                    <input type="password" id="new-password" placeholder="New Password" style="margin-bottom:12px;width:100%;padding:8px;border-radius:6px;border:1px solid #444;">
+                    <button class="cta-btn" onclick="changeCredentials()">Save</button>
+                    <button class="cta-btn" style="background:#444;margin-left:8px;" onclick="hideChangeCredentials()">Cancel</button>
+                    <div id="change-error" style="color:#fe3130;margin-top:8px;"></div>
+                </div>
+            </div>
         </main>
         <footer>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-        <p style="margin: 0;">&copy; 2025 the vision</p>
-    </div>
-</footer>
-        
-        <!-- Updated credentials container -->
-        <div class="credentials-container" style="position:static; right:auto; bottom:auto; z-index:auto; margin:32px 0 0 0; text-align:center;">
-            <button class="cta-btn" onclick="showChangeCredentials()">Change Username/Password</button>
-            <div id="change-credentials-area" style="display:none; position:relative; background:#222; padding:20px; border-radius:12px; box-shadow:0 2px 8px #000; width:250px; margin:10px auto 0 auto;">
-                <h3>Change Credentials</h3>
-                <input type="text" id="new-username" placeholder="New Username" style="margin-bottom:12px;width:100%;padding:8px;border-radius:6px;border:1px solid #444;">
-                <input type="password" id="new-password" placeholder="New Password" style="margin-bottom:12px;width:100%;padding:8px;border-radius:6px;border:1px solid #444;">
-                <button class="cta-btn" onclick="changeCredentials()">Save</button>
-                <button class="cta-btn" style="background:#444;margin-left:8px;" onclick="hideChangeCredentials()">Cancel</button>
-                <div id="change-error" style="color:#fe3130;margin-top:8px;"></div>
+            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <p style="margin: 0;">&copy; 2025 the vision</p>
             </div>
-        </div>
+        </footer>
     </div>
+    <script src="js/api.js"></script>
     <script>
-        // Product types configuration
-const productConfig = {
-    tshirt: {
-        attributes: ['color', 'style'],
-        sizes: ['S', 'M', 'L', 'XL'],
-        images: ['Front', 'Back']
-    },
-    jort: {
-        attributes: ['color'],
-        sizes: ['S', 'M', 'L', 'XL'],
-        images: ['Front', 'Back', 'Side']
-    },
-    other: {
-        attributes: [],
-        sizes: ['One Size'],
-        images: ['Main']
+    const defaultSizes = ['S', 'M', 'L', 'XL'];
+    // --- Product Management ---
+    async function renderProducts() {
+        const products = await fetchProducts();
+        const container = document.getElementById('products-list');
+        if (!products || products.length === 0) {
+            container.innerHTML = '<p>No products found</p>';
+            return;
+        }
+        let html = '';
+        products.forEach(product => {
+            html += `
+            <div class="product-item" style="background:#333; padding:15px; margin-bottom:15px; border-radius:8px;">
+                <h4>${product.name} (${product.type}) - ${product.price} TND</h4>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="cta-btn" onclick="editProduct('${product.id}')">Edit</button>
+                    <button class="cta-btn" style="background:#fe3130;" onclick="deleteProduct('${product.id}')">Delete</button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
     }
-};
-
-// Render products list
-async function renderProducts() {
-    const products = await fetchProducts();
-    const container = document.getElementById('products-list');
-    
-    if (products.length === 0) {
-        container.innerHTML = '<p>No products found</p>';
-        return;
-    }
-    
-    let html = '';
-    products.forEach(product => {
-        html += `
-        <div class="product-item" style="background:#333; padding:15px; margin-bottom:15px; border-radius:8px;">
-            <h4>${product.name} (${product.type}) - ${product.price} TND</h4>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="cta-btn" onclick="editProduct('${product.id}')">Edit</button>
-                <button class="cta-btn" style="background:#fe3130;" onclick="deleteProduct('${product.id}')">Delete</button>
-            </div>
+    function addStyleField(value = '', label = '') {
+        const container = document.getElementById('product-styles');
+        const index = container.children.length;
+        const html = `
+        <div class="style-field" style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+            <input type="text" placeholder="Style Value" value="${value}" style="flex:1; padding:8px; border-radius:6px;" id="style-value-${index}">
+            <input type="text" placeholder="Style Label" value="${label}" style="flex:2; padding:8px; border-radius:6px;" id="style-label-${index}">
+            <button class="cta-btn" style="background:#fe3130; padding:5px 10px;" onclick="this.parentElement.remove()">Remove</button>
         </div>`;
-    });
-    
-    container.innerHTML = html;
-}
-
-// Add image field to product form
-function addImageField(name = '', url = '') {
-    const container = document.getElementById('product-images');
-    const index = container.children.length;
-    
-    const html = `
-    <div class="image-field" style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
-        <input type="text" placeholder="Image Name" value="${name}" 
-            style="flex:1; padding:8px; border-radius:6px;" id="image-name-${index}">
-        <input type="text" placeholder="Image URL" value="${url}" 
-            style="flex:2; padding:8px; border-radius:6px;" id="image-url-${index}">
-        <button class="cta-btn" style="background:#fe3130; padding:5px 10px;" 
-            onclick="this.parentElement.remove()">Remove</button>
-    </div>`;
-    
-    container.insertAdjacentHTML('beforeend', html);
-}
-
-// Show product form
-function showAddProductForm() {
-    document.getElementById('product-form-title').textContent = 'Add Product';
-    document.getElementById('product-id').value = '';
-    document.getElementById('product-name').value = '';
-    document.getElementById('product-price').value = '';
-    document.getElementById('product-type').value = 'tshirt';
-    
-    // Clear images
-    document.getElementById('product-images').innerHTML = '';
-    addImageField(); // Add one empty image field
-    
-    // Clear stock config
-    document.getElementById('stock-configuration').innerHTML = '';
-    
-    document.getElementById('product-form-container').style.display = 'block';
-}
-
-// Edit existing product
-async function editProduct(id) {
-    const products = await fetchProducts();
-    const product = products.find(p => p.id === id);
-    
-    if (!product) return;
-    
-    document.getElementById('product-form-title').textContent = 'Edit Product';
-    document.getElementById('product-id').value = product.id;
-    document.getElementById('product-name').value = product.name;
-    document.getElementById('product-price').value = product.price;
-    document.getElementById('product-type').value = product.type;
-    
-    // Clear and set images
-    const imagesContainer = document.getElementById('product-images');
-    imagesContainer.innerHTML = '';
-    product.images.forEach(img => {
-        addImageField(img.name, img.url);
-    });
-    
-    // Clear and set stock config
-    const stockContainer = document.getElementById('stock-configuration');
-    stockContainer.innerHTML = generateStockForm(product);
-    
-    document.getElementById('product-form-container').style.display = 'block';
-}
-
-// Generate stock form based on product type
-function generateStockForm(product) {
-    const type = product.type || 'tshirt';
-    const config = productConfig[type];
-    
-    let html = '';
-    
-    if (type === 'tshirt') {
-        html += `<h5>Styles</h5>`;
-        config.styles.forEach(style => {
-            html += `<div style="margin-bottom:15px;">
-                <h6>${style}</h6>`;
-            config.sizes.forEach(size => {
-                const qty = product.stock?.[style]?.[size] || 0;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+    function addImageField(name = '', url = '', style = '') {
+        const container = document.getElementById('product-images');
+        const index = container.children.length;
+        const html = `
+        <div class="image-field" style="margin-bottom:10px; display:flex; align-items:center; gap:10px;">
+            <input type="text" placeholder="Image Name" value="${name}" style="flex:1; padding:8px; border-radius:6px;" id="image-name-${index}">
+            <input type="text" placeholder="Image URL" value="${url}" style="flex:2; padding:8px; border-radius:6px;" id="image-url-${index}">
+            <input type="text" placeholder="Style Value (optional)" value="${style}" style="flex:1; padding:8px; border-radius:6px;" id="image-style-${index}">
+            <button class="cta-btn" style="background:#fe3130; padding:5px 10px;" onclick="this.parentElement.remove()">Remove</button>
+        </div>`;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+    function showAddProductForm() {
+        document.getElementById('product-form-title').textContent = 'Add Product';
+        document.getElementById('product-id').value = '';
+        document.getElementById('product-name').value = '';
+        document.getElementById('product-price').value = '';
+        document.getElementById('product-type').value = '';
+        document.getElementById('product-styles').innerHTML = '';
+        document.getElementById('product-images').innerHTML = '';
+        // Show style editor for tshirt or if type is not set yet
+        const type = document.getElementById('product-type').value.trim();
+        if (!type || type === 'tshirt') {
+            addStyleField('grey-black', 'Grey on Black');
+            addStyleField('white-black', 'White on Black');
+            addStyleField('white-red', 'White on Red');
+        } else {
+            addStyleField();
+        }
+        addImageField();
+        document.getElementById('stock-configuration').innerHTML = generateStockForm({});
+        document.getElementById('product-form-container').style.display = 'block';
+    }
+    function cancelProductEdit() {
+        document.getElementById('product-form-container').style.display = 'none';
+        document.getElementById('product-id').value = '';
+        document.getElementById('product-images').innerHTML = '';
+        document.getElementById('product-styles').innerHTML = '';
+        document.getElementById('stock-configuration').innerHTML = '';
+    }
+    async function editProduct(id) {
+        const products = await fetchProducts();
+        const product = products.find(p => p.id === id);
+        if (!product) {
+            alert('Product not found.');
+            return;
+        }
+        document.getElementById('product-form-title').textContent = 'Edit Product';
+        document.getElementById('product-id').value = product.id;
+        document.getElementById('product-name').value = product.name;
+        document.getElementById('product-price').value = product.price;
+        document.getElementById('product-type').value = product.type;
+        const stylesContainer = document.getElementById('product-styles');
+        stylesContainer.innerHTML = '';
+        if ((product.type === 'tshirt') || (Array.isArray(product.styles) && product.styles.length > 0)) {
+            (product.styles || [
+                { value: 'grey-black', label: 'Grey on Black' },
+                { value: 'white-black', label: 'White on Black' },
+                { value: 'white-red', label: 'White on Red' }
+            ]).forEach(style => addStyleField(style.value, style.label));
+        } else {
+            addStyleField();
+        }
+        const imagesContainer = document.getElementById('product-images');
+        imagesContainer.innerHTML = '';
+        (product.images || []).forEach(img => addImageField(img.name, img.url, img.style || ''));
+        if ((product.images || []).length === 0) addImageField();
+        document.getElementById('stock-configuration').innerHTML = generateStockForm(product);
+        document.getElementById('product-form-container').style.display = 'block';
+    }
+    function generateStockForm(product) {
+        let html = '';
+        if (product.type === 'tshirt' || (Array.isArray(product.styles) && product.styles.length > 0)) {
+            // For each style, show size inputs
+            const stylesArr = product.styles && product.styles.length > 0
+                ? product.styles
+                : [
+                    { value: 'grey-black', label: 'Grey on Black' },
+                    { value: 'white-black', label: 'White on Black' },
+                    { value: 'white-red', label: 'White on Red' }
+                ];
+            stylesArr.forEach(styleObj => {
+                const style = styleObj.value;
+                // Always initialize all sizes for each style
+                html += `<div style="margin-bottom:8px;"><b>${styleObj.label}:</b> `;
+                ['S', 'M', 'L', 'XL'].forEach(size => {
+                    let qty = (product.stock && product.stock[style] && product.stock[style][size]) ? product.stock[style][size] : 0;
+                    html += `${size}: <input type="number" min="0" value="${qty}" style="width:60px; padding:5px;" id="stock-size-${style}-${size}"> `;
+                });
+                html += '</div>';
+            });
+        } else {
+            // Flat stock for other products
+            ['S', 'M', 'L', 'XL'].forEach(size => {
+                let qty = product.stock?.[size] || 0;
                 html += `
                 <div style="display:inline-block; margin-right:15px;">
-                    ${size}: <input type="number" min="0" value="${qty}" 
-                        style="width:60px; padding:5px;" 
-                        id="stock-${style}-${size}">
+                    ${size}: <input type="number" min="0" value="${qty}" style="width:60px; padding:5px;" id="stock-size-${size}">
                 </div>`;
             });
-            html += `</div>`;
-        });
-    } 
-    else if (type === 'jort') {
-        html += `<h5>Colors</h5>`;
-        config.colors.forEach(color => {
-            html += `<div style="margin-bottom:15px;">
-                <h6>${color}</h6>`;
-            config.sizes.forEach(size => {
-                const qty = product.stock?.[color]?.[size] || 0;
-                html += `
-                <div style="display:inline-block; margin-right:15px;">
-                    ${size}: <input type="number" min="0" value="${qty}" 
-                        style="width:60px; padding:5px;" 
-                        id="stock-${color}-${size}">
-                </div>`;
-            });
-            html += `</div>`;
-        });
+        }
+        return html;
     }
-    else {
-        // Other products
-        const qty = product.stock || 0;
-        html += `
-        <div>
-            Quantity: <input type="number" min="0" value="${qty}" 
-                style="width:100px; padding:5px;" id="stock-other">
-        </div>`;
-    }
-    
-    return html;
-}
+    async function saveProduct() {
+        const id = document.getElementById('product-id').value;
+        const name = document.getElementById('product-name').value.trim();
+        const price = parseFloat(document.getElementById('product-price').value);
+        const type = document.getElementById('product-type').value.trim();
+        // Collect styles
+        const styles = [];
+        document.querySelectorAll('#product-styles .style-field').forEach(field => {
+            const value = field.querySelector('input[placeholder="Style Value"]').value;
+            const label = field.querySelector('input[placeholder="Style Label"]').value;
+            if (value && label) styles.push({ value, label });
+        });
 
-// Save product
-async function saveProduct() {
-    const id = document.getElementById('product-id').value;
-    const name = document.getElementById('product-name').value;
-    const price = parseFloat(document.getElementById('product-price').value);
-    const type = document.getElementById('product-type').value;
-    
-    // Collect images
-    const images = [];
-    const imageFields = document.querySelectorAll('#product-images .image-field');
-    imageFields.forEach(field => {
-        const name = field.querySelector('input[placeholder="Image Name"]').value;
-        const url = field.querySelector('input[placeholder="Image URL"]').value;
-        if (name && url) images.push({ name, url });
-    });
-    
-    // Collect stock data
-    let stock = {};
-    const config = productConfig[type];
-    
-    if (type === 'tshirt') {
-        config.styles.forEach(style => {
-            stock[style] = {};
-            config.sizes.forEach(size => {
-                const qty = parseInt(document.getElementById(`stock-${style}-${size}`).value) || 0;
-                stock[style][size] = qty;
-            });
+        // Collect images, with style assignment
+        const images = [];
+        document.querySelectorAll('#product-images .image-field').forEach(field => {
+            const name = field.querySelector('input[placeholder="Image Name"]').value;
+            const url = field.querySelector('input[placeholder="Image URL"]').value;
+            const style = field.querySelector('input[placeholder="Style Value (optional)"]').value;
+            if (name && url) images.push(style ? { name, url, style } : { name, url });
         });
-    } 
-    else if (type === 'jort') {
-        config.colors.forEach(color => {
-            stock[color] = {};
-            config.sizes.forEach(size => {
-                const qty = parseInt(document.getElementById(`stock-${color}-${size}`).value) || 0;
-                stock[color][size] = qty;
-            });
-        });
-    }
-    else {
-        stock = parseInt(document.getElementById('stock-other').value) || 0;
-    }
-    
-    const product = {
-        id, name, price, type, images, stock
-    };
-    
-    // Save to backend
-    await saveProductAPI(product);
-    
-    // Refresh UI
-    document.getElementById('product-form-container').style.display = 'none';
-    renderProducts();
-}
 
-// Delete product
-async function deleteProduct(id) {
-    if (confirm('Are you sure you want to delete this product?')) {
-        await deleteProductAPI(id);
+        // --- T-shirt stock structure ---
+        let stock = {};
+        if (type === 'tshirt') {
+            // Always initialize all styles and sizes
+            styles.forEach(styleObj => {
+                const style = styleObj.value;
+                stock[style] = {};
+                ['S', 'M', 'L', 'XL'].forEach(size => {
+                    const inputId = `stock-size-${style}-${size}`;
+                    let qty = 0;
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        qty = parseInt(input.value) || 0;
+                    }
+                    stock[style][size] = qty;
+                });
+            });
+        } else {
+            // Flat stock for other products
+            ['S', 'M', 'L', 'XL'].forEach(size => {
+                const inputId = `stock-size-${size}`;
+                let qty = 0;
+                const input = document.getElementById(inputId);
+                if (input) {
+                    qty = parseInt(input.value) || 0;
+                }
+                stock[size] = qty;
+            });
+        }
+
+        const product = { name, price, type, images, stock };
+        if (styles.length > 0) product.styles = styles;
+        if (id) product.id = id;
+        const result = await saveProductAPI(product);
+        if (!result.success) {
+            alert(result.error || 'Failed to save product.');
+            return;
+        }
+        if (!id && result.id) product.id = result.id;
+
+        // --- Sync global stocks structure ---
+        let stocks = await fetchStocks();
+        if (type === 'tshirt') {
+            stocks.tshirt = { ...stock };
+        } else if (type === 'jort') {
+            stocks.jort = { ...stock };
+        }
+        await setStocksAPI(stocks);
+        // --- End stocks sync ---
+
+        document.getElementById('product-form-container').style.display = 'none';
         renderProducts();
     }
-}
-
-// API functions
-async function fetchProducts() {
-    const res = await fetch(`${API_BASE}/products`);
-    return await res.json();
-}
-
-async function saveProductAPI(product) {
-    const res = await fetch(`${API_BASE}/products`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(product)
-    });
-    return await res.json();
-}
-
-async function deleteProductAPI(id) {
-    const res = await fetch(`${API_BASE}/products/${id}`, {
-        method: 'DELETE'
-    });
-    return await res.json();
-}
-
-// Initialize on admin login
-async function adminLogin() {
-    // ... existing code ...
-    renderProducts(); // Add this
-}
-    // --- Simple credential storage ---
+    async function deleteProduct(id) {
+        if (confirm('Are you sure you want to delete this product?')) {
+            const result = await deleteProductAPI(id);
+            if (!result.success) {
+                alert(result.error || 'Failed to delete product.');
+                return;
+            }
+            renderProducts();
+        }
+    }
+    // --- API functions ---
+    async function fetchProducts() {
+        try { const res = await fetch(`${API_BASE}/products`); return await res.json(); }
+        catch (e) { console.error('Error fetching products:', e); return []; }
+    }
+    async function saveProductAPI(product) {
+        try {
+            const res = await fetch(`${API_BASE}/products`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            });
+            return await res.json();
+        } catch (e) { console.error('Error saving product:', e); return { success: false }; }
+    }
+    async function deleteProductAPI(id) {
+        try {
+            const res = await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+            return await res.json();
+        } catch (e) { console.error('Error deleting product:', e); return { success: false }; }
+    }
+    // --- Credentials ---
     function getAdminCredentials() {
         return JSON.parse(localStorage.getItem('adminCredentials') || '{"username":"admin","password":"vision2025"}');
     }
     function setAdminCredentials(username, password) {
         localStorage.setItem('adminCredentials', JSON.stringify({username, password}));
     }
-
-    // --- Login logic ---
     async function adminLogin() {
         const username = document.getElementById('admin-username').value.trim();
         const password = document.getElementById('admin-password').value.trim();
@@ -370,12 +362,11 @@ async function adminLogin() {
             renderStockInputs();
             await loadStocksToInputs();
             await renderOrders();
+            await renderProducts();
         } else {
             errorDiv.textContent = 'Incorrect username or password.';
         }
     }
-
-    // --- Change credentials logic ---
     function showChangeCredentials() {
         document.getElementById('change-credentials-area').style.display = 'block';
     }
@@ -397,17 +388,20 @@ async function adminLogin() {
         errorDiv.textContent = "Credentials updated!";
         setTimeout(hideChangeCredentials, 1200);
     }
-
-    // --- Orders and stocks logic (same as before) ---
+    // --- Orders and stocks logic ---
     async function renderOrders() {
         const orders = await fetchOrders();
         const container = document.getElementById('orders-list');
-        if (orders.length === 0) {
+        if (!orders || orders.length === 0) {
             container.innerHTML = '<p>No orders yet.</p>';
             return;
         }
         let html = '';
         orders.forEach((order, idx) => {
+            // Calculate total cost
+            const totalCost = Array.isArray(order.cart)
+                ? order.cart.reduce((sum, item) => sum + (Number(item.price) || 0), 0)
+                : 0;
             html += `<div style="background:#222;padding:16px;margin-bottom:16px;border-radius:8px;">
                 <strong>Order #${idx+1}</strong><br>
                 <b>Date:</b> ${order.date}<br>
@@ -417,21 +411,19 @@ async function adminLogin() {
                 <b>Address:</b> ${order.address}<br>
                 <b>Items:</b>
                 <ul style="list-style:none;padding:0;">${order.cart.map(item => `<li>${item.name} - ${item.price} TND</li>`).join('')}</ul>
+                <div style="font-weight:700;color:#e8491d;margin-top:8px;">Total: ${totalCost} TND</div>
                 <button class="cta-btn" style="margin-top:12px;" onclick="deleteOrder(${idx})">Delete Order</button>
             </div>`;
         });
         container.innerHTML = html;
     }
-
     async function deleteOrder(index) {
         await deleteOrderAPI(index);
         renderOrders();
     }
-
     // --- Stock management ---
     const tshirtStyles = ["grey-black", "white-black", "white-red"];
     const sizes = ["S", "M", "L", "XL"];
-
     function renderStockInputs() {
         let tshirtHtml = '';
         tshirtStyles.forEach(style => {
@@ -442,7 +434,6 @@ async function adminLogin() {
             tshirtHtml += '</div>';
         });
         document.getElementById('tshirt-stock-inputs').innerHTML = tshirtHtml;
-
         let jortHtml = '<div>';
         sizes.forEach(size => {
             jortHtml += `${size}: <input type="number" min="0" id="stock-jort-${size}" style="width:40px;"> `;
@@ -450,7 +441,6 @@ async function adminLogin() {
         jortHtml += '</div>';
         document.getElementById('jort-stock-inputs').innerHTML = jortHtml;
     }
-
     async function setAdminStocks() {
         let stocks = { tshirt: {}, jort: {} };
         tshirtStyles.forEach(style => {
@@ -466,7 +456,6 @@ async function adminLogin() {
         await setStocksAPI(stocks);
         alert('Stocks updated!');
     }
-
     async function loadStocksToInputs() {
         const stocks = await fetchStocks();
         tshirtStyles.forEach(style => {
@@ -479,52 +468,5 @@ async function adminLogin() {
         });
     }
     </script>
-    <script src="js/api.js"></script>
-    <section>
-    <h2>Manage Products</h2>
-    <button class="cta-btn" onclick="showAddProductForm()">Add New Product</button>
-    <div id="products-list" style="margin-top: 20px;"></div>
-</section>
-
-<!-- Product Form (initially hidden) -->
-<div id="product-form-container" style="display:none; background:#222; padding:20px; border-radius:12px; margin-top:20px;">
-    <h3 id="product-form-title">Add Product</h3>
-    <input type="hidden" id="product-id">
-    
-    <div style="margin-bottom:15px;">
-        <label>Product Name</label>
-        <input type="text" id="product-name" style="width:100%; padding:8px; border-radius:6px;">
-    </div>
-    
-    <div style="margin-bottom:15px;">
-        <label>Price (TND)</label>
-        <input type="number" id="product-price" style="width:100%; padding:8px; border-radius:6px;">
-    </div>
-    
-    <div style="margin-bottom:15px;">
-        <label>Type</label>
-        <select id="product-type" style="width:100%; padding:8px; border-radius:6px;">
-            <option value="tshirt">T-shirt</option>
-            <option value="jort">Jort</option>
-            <option value="other">Other</option>
-        </select>
-    </div>
-    
-    <h4>Images</h4>
-    <div id="product-images" style="margin-bottom:20px;">
-        <!-- Dynamic image fields will appear here -->
-    </div>
-    <button type="button" class="cta-btn" onclick="addImageField()">Add Image</button>
-    
-    <h4>Stock Configuration</h4>
-    <div id="stock-configuration">
-        <!-- Dynamic stock fields will appear here -->
-    </div>
-    
-    <div style="margin-top:20px; display:flex; gap:10px;">
-        <button class="cta-btn" onclick="saveProduct()">Save Product</button>
-        <button class="cta-btn" style="background:#444;" onclick="cancelProductEdit()">Cancel</button>
-    </div>
-</div>
 </body>
 </html>
