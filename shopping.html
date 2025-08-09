@@ -4,70 +4,346 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping - THE VISION</title>
-
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <meta name="description" content="Shop THE VISION streetwear. Cinematic, bold, mysterious. Not just a brand. A statement.">
+    <meta property="og:title" content="Shop - THE VISION">
+    <meta property="og:description" content="Browse and buy THE VISION streetwear. Wear your vision. Make your statement.">
+    <meta property="og:image" content="img/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#000">
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <style>
+        .product-list-clean {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            justify-content: center;
+            width: 100%;
+            align-items: stretch;
+            margin-top: 24px;
+        }
+        .product-card-clean {
+            background: #232323;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #0002;
+            padding: 32px 24px 24px 24px;
+            min-width: 260px;
+            max-width: 340px;
+            flex: 1 1 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: box-shadow 0.18s, transform 0.18s;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card-clean img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: #fff;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px #0001;
+            transition: transform 0.18s;
+        }
+        .product-card-clean h3 {
+            font-family: 'HOTHOM', Arial, sans-serif;
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 16px 0;
+            text-align: center;
+        }
+        .product-card-clean .card-btn-area {
+            margin-top: 14px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        .product-card-clean:hover img {
+            transform: scale(1.05);
+        }
+        .hero-quote {
+            font-family: 'HORIZON', Arial, sans-serif;
+            font-size: 1.1em;
+            color: #f5f5f5;
+            background: rgba(0,0,0,0.55);
+            padding: 14px 24px;
+            border-radius: 18px;
+            box-shadow: 0 2px 18px #0004;
+            margin: 28px auto 0 auto;
+            max-width: 600px;
+            text-align: center;
+            letter-spacing: 0.09em;
+            opacity: 0.85;
+            z-index: 2;
+            position: relative;
+        }
+        .hero-scroll-down {
+            margin-top: 32px;
+            text-align: center;
+            color: #fff;
+            opacity: 0.7;
+            font-size: 1em;
+            letter-spacing: 0.13em;
+            animation: fadeIn 2.2s cubic-bezier(.4,0,.2,1);
+        }
+        .hero-scroll-down svg {
+            display: block;
+            margin: 0 auto;
+            animation: bounceDown 1.5s infinite alternate;
+        }
+        @keyframes bounceDown {
+            to { transform: translateY(12px);}
+        }
+        @media (max-width: 900px) {
+            .product-list-clean {
+                gap: 16px;
+            }
+            .product-card-clean {
+                min-width: 180px;
+                max-width: 60vw;
+                padding: 18px 2vw 18px 2vw;
+            }
+            .product-card-clean img {
+                width: 110px;
+                height: 110px;
+            }
+        }
+        @media (max-width: 600px) {
+            .product-list-clean {
+                gap: 8px;
+            }
+            .product-card-clean {
+                min-width: 120px;
+                max-width: 98vw;
+                padding: 10px 1vw 10px 1vw;
+            }
+            .product-card-clean img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, rgba(24,24,24,0.92) 60%, rgba(24,24,24,0.98) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero {
+            position: relative;
+            min-height: 26vh;
+            /* was 38vh */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-top: 18px;
+            padding-bottom: 10px;
+        }
+        .hero-logo {
+            width: 96px;
+            height: 96px;
+            margin-bottom: 4px;
+        }
+        .hero-title {
+            font-size: 1.1em;
+            margin-bottom: 4px;
+        }
+        .hero-divider {
+            width: 100vw;
+            height: 12px;
+            /* was 32px */
+            margin: 0;
+            background: linear-gradient(180deg, rgba(24,24,24,0.01) 0%, #181818 100%);
+            border: none;
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .hero {
+                min-height: 14vh;
+                padding-top: 8px;
+                padding-bottom: 4px;
+            }
+            .hero-logo {
+                width: 56px;
+                height: 56px;
+            }
+            .hero-title {
+                font-size: 0.85em;
+            }
+            .hero-divider {
+                height: 6px;
+            }
+        }
+        /* Parallax background for hero */
+        .parallax-bg {
+            background-image: url('img/hero-bg.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        /* Cinematic reveal animation */
+        .cinematic-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealAnim 0.8s forwards;
+        }
+        @keyframes revealAnim {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Fade-in effect for sections */
+        .section-fade {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInAnim 0.8s forwards;
+        }
+        @keyframes fadeInAnim {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+            width: 100%;
+            margin-top: 16px;
+        }
+        .product-card {
+            background: #232323;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #0002;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: transform 0.18s, box-shadow 0.18s;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #0002;
+            margin-bottom: 16px;
+            transition: transform 0.18s;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 24px #0004;
+        }
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+        .product-title-black {
+            font-family: 'HOTHOM', Arial, sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 8px 0;
+            text-align: center;
+        }
+        .price {
+            font-family: 'HORIZON', Arial, sans-serif;
+            font-size: 1rem;
+            color: #f5f5f5;
+            margin: 0 0 12px 0;
+            text-align: center;
+        }
+        .card-btn-area {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
-    <header class="hero">
-        <img src="img/logo.jpg" alt="THE VISION Logo" class="hero-logo">
-        <h1 class="hero-title">Shopping</h1>
-        <div class="hero-cart-link">
-            <a href="cart.html" class="cta-btn">Cart</a>
+    <header class="hero parallax-bg" style="position:relative;min-height:26vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding-top:18px;padding-bottom:10px;">
+        <div class="header-mosaic-bg">
+            <!-- Copy all mosaic tiles from index.html here -->
+            <!-- ...mosaic tiles... -->
         </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <button class="header-back-btn" onclick="window.location.href='index.html'" aria-label="Back to Home">
+                <span class="back-btn-circle">Back</span>
+            </button>
+            <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo">
+            <h1 class="hero-title cinematic-reveal"><span>Shop</span></h1>
+            <div class="hero-cart-link">
+                <a href="cart.html" aria-label="Cart">
+                    <img src="img/cart.png" alt="Cart" class="cart-btn-img">
+                </a>
+            </div>
+            <div class="hero-quote cinematic-reveal">
+                <span>"Wear your vision. Make your statement."</span>
+            </div>
+            <div class="hero-scroll-down">
+                <span>Scroll to browse products</span>
+                <svg width="32" height="32" fill="none" stroke="#fff" stroke-width="2"><path d="M16 8v16M8 20l8 8 8-8"/></svg>
+            </div>
+        </div>
+        <div class="hero-divider"></div>
     </header>
-    <div style="text-align:center;">
-        <a href="index.html" class="cta-btn">Back to Home</a>
-    </div>
     <main>
-        <section>
-            <h2>Our Products</h2>
-            <div class="product-list" id="product-list" style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;">
+        <section class="main-section section-fade">
+            <h2 class="section-title-fade">Our Products</h2>
+            <div class="product-list" id="product-list">
                 <!-- Products will be rendered here -->
             </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2025 the vision</p>
+    <footer class="footer">
+        <div class="footer-links">
+            <div>
+                <h3>Support</h3>
+                <a href="#">FAQ</a> |
+                <a href="#">Contact</a>
+            </div>
+            <div>
+                <h3>Boring Stuff</h3>
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Terms & Conditions</a>
+            </div>
+            <div>
+                <h3>Follow Us</h3>
+                <a href="https://www.tiktok.com/@thevision.tn" target="_blank" rel="noopener">TikTok</a> |
+                <a href="https://www.instagram.com/thevision.tn/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+        <div class="footer-copy">&copy; 2025 THE VISION. All rights reserved.</div>
     </footer>
-    <script>
-    function updateStyles() {
-        const color = document.getElementById('color').value;
-        const styleSelect = document.getElementById('style');
-        styleSelect.innerHTML = '';
-        if (color === 'red') {
-            styleSelect.innerHTML = '<option value="white-red">White on Red</option>';
-        } else {
-            styleSelect.innerHTML = 
-                '<option value="grey-black">Grey on Black</option>' +
-                '<option value="white-black">White on Black</option>';
-        }
-        updateImages();
-    }
-    function updateImages() {
-        const color = document.getElementById('color').value;
-        const style = document.getElementById('style').value;
-        const frontImg = document.getElementById('frontImg');
-        const backImg = document.getElementById('backImg');
-        if (color === 'red') {
-            frontImg.src = 'img/front red.jpg';
-            backImg.src = 'img/back red-white.jpg';
-            frontImg.alt = 'Front Red';
-            backImg.alt = 'Back White on Red';
-        } else if (style === 'grey-black') {
-            frontImg.src = 'img/front black.jpg';
-            backImg.src = 'img/back grey-black.jpg';
-            frontImg.alt = 'Front Black';
-            backImg.alt = 'Back Grey on Black';
-        } else if (style === 'white-black') {
-            frontImg.src = 'img/front black.jpg';
-            backImg.src = 'img/back black-white.jpg';
-            frontImg.alt = 'Front Black';
-            backImg.alt = 'Back White on Black';
-        }
-    }
-    // Initialize on page load
-    updateStyles();
-    </script>
     <script src="js/api.js"></script>
     <script>
     async function renderProducts() {
@@ -86,25 +362,37 @@
         }
         let html = '';
         products.forEach(product => {
-            let img;
+            let img, altImg = null;
             if (product.type === 'tshirt') {
                 img = 'img/front black.jpg';
+                if (product.images && product.images.length > 1) {
+                    altImg = product.images[1].url;
+                    if (!/^https?:\/\//.test(altImg) && !altImg.startsWith('img/')) {
+                        altImg = 'img/' + altImg.replace(/^\.?\/*/, '');
+                    }
+                }
             } else if (product.type === 'jort') {
-                img = 'img/jort back.jpg';
+                img = 'img/jort front.jpg';
+                if (product.images && product.images.length > 1) {
+                    altImg = product.images[1].url;
+                    if (!/^https?:\/\//.test(altImg) && !altImg.startsWith('img/')) {
+                        altImg = 'img/' + altImg.replace(/^\.?\/*/, '');
+                    }
+                }
             } else {
-                img = (product.images && product.images[0] && product.images[0].url) ? product.images[0].url : 'img/logo.jpg';
+                img = (product.images && product.images[0] && product.images[0].url) ? product.images[0].url : 'img/logo.png';
                 if (!/^https?:\/\//.test(img) && !img.startsWith('img/')) {
                     img = 'img/' + img.replace(/^\.?\/*/, '');
                 }
             }
             html += `
-                <div class="product-card" style="background:#fafbfc;padding:24px;border-radius:12px;box-shadow:0 2px 8px rgba(45,137,239,0.05);text-align:center;">
-                    <img src="${img}" alt="${product.name}" style="width:120px;height:auto;margin-bottom:12px;" onerror="this.src='img/logo.jpg'">
-                    <h3 class="product-title-black">${product.name}</h3>
-                    <div style="margin:16px 0;">
-                        <a href="product.html?id=${product.id}" class="cta-btn black-btn">View ${product.name}</a>
+                <div class="product-card" style="position:relative;overflow:hidden;">
+                    <img src="${img}" alt="${product.name}" onerror="this.src='img/logo.png'" 
+                        ${altImg ? `onmouseover="this.src='${altImg}'" onmouseout="this.src='${img}'"` : ''} style="width:140px;height:140px;object-fit:contain;border-radius:14px;box-shadow:0 2px 12px #0002;margin-bottom:16px;">
+                    <div class="product-title-black">${product.name}</div>
+                    <div class="card-btn-area" style="margin-top:10px;">
+                        <a href="product.html?id=${product.id}" class="cta-btn black-btn" style="padding:10px 22px;font-size:1em;">View</a>
                     </div>
-                    <div style="font-size:1.1em;color:#181818;font-weight:600;">${product.price} TND</div>
                 </div>
             `;
         });

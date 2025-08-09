@@ -5,38 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart - THE VISION</title>
     <link rel="stylesheet" href="css/styles.css">
-
+    <link rel="stylesheet" href="css/fonts.css">
+    <meta name="description" content="Your cart at THE VISION. Review and checkout your streetwear selections.">
+    <meta property="og:title" content="Cart - THE VISION">
+    <meta property="og:description" content="Review your cart and checkout THE VISION streetwear.">
+    <meta property="og:image" content="img/logo.png">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#000">
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <style>
+        .hero {
+            position: relative;
+            min-height: 26vh;
+            /* was 38vh */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding-top: 18px;
+            padding-bottom: 10px;
+            z-index: 10;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-logo {
+            width: 96px;
+            height: 96px;
+            margin-bottom: 4px;
+        }
+        .hero-title {
+            font-size: 1.1em;
+            margin-bottom: 4px;
+        }
+        .header-mosaic-bg {
+            /* Add your mosaic background styles here if needed */
+        }
+        .hero-overlay {
+            /* Add overlay styles if not in styles.css */
+        }
+        .hero-divider {
+            width: 100vw;
+            height: 12px;
+            /* was 32px */
+            margin: 0;
+            background: linear-gradient(180deg, rgba(24,24,24,0.01) 0%, #181818 100%);
+            border: none;
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .hero {
+                min-height: 14vh;
+                padding-top: 8px;
+                padding-bottom: 4px;
+            }
+            .hero-logo {
+                width: 56px;
+                height: 56px;
+            }
+            .hero-title {
+                font-size: 0.85em;
+            }
+            .hero-divider {
+                height: 6px;
+            }
+        }
+        .main-section {
+            padding-top: 0 !important;
+        }
+    </style>
 </head>
 <body>
-    <header class="hero">
-        <img src="img/logo.jpg" alt="THE VISION Logo" class="hero-logo">
-        <h1 class="hero-title">Your Cart</h1>
+    <header class="hero parallax-bg">
+        <div class="header-mosaic-bg">
+            <!-- Copy all mosaic tiles from index.html here -->
+            <!-- ...mosaic tiles... -->
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <button class="header-back-btn" onclick="window.location.href='shopping.html'" aria-label="Back to Shop">
+                <span class="back-btn-circle">Back</span>
+            </button>
+            <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo">
+            <h1 class="hero-title cinematic-reveal"><span>Your Cart</span></h1>
+            <div class="hero-cart-link">
+                </a>
+            </div>
+            <div class="hero-quote cinematic-reveal">
+                <span>"Every vision starts with a choice."</span>
+            </div>
+        </div>
+        <div class="hero-divider"></div>
     </header>
-    <div style="text-align:center;">
-        <a href="shopping.html" class="cta-btn">Back to Shop</a>
-    </div>
     <main>
-        <section>
-            <h2>Items in your cart</h2>
-            <div id="cart-items"></div>
+        <section class="main-section section-fade" style="padding-top:0;">
+            <h2 class="section-title-fade">Items in your cart</h2>
+            <div id="cart-items" style="max-width:700px;margin:0 auto;"></div>
             <div id="checkout-area" style="text-align:center; margin-top:32px;">
-    <button class="cta-btn" onclick="showCheckoutForm()">Checkout</button>
-    <div id="checkout-form" style="display:none; margin-top:24px;">
-        <h3>Checkout</h3>
-        <form onsubmit="submitCheckout(event)">
-            <input type="text" id="buyer-name" placeholder="Full name" required style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-            <input type="text" id="buyer-number" placeholder="Phone number (8 digits)" maxlength="8" required pattern="\d{8}" style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-            <input type="email" id="buyer-email" placeholder="Email address" required style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-            <input type="text" id="buyer-address" placeholder="Full address" required style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-            <button type="submit" class="cta-btn" style="margin-top:12px;">Confirm Order</button>
-        </form>
-        <div id="checkout-error" style="color:#fe3130;margin-top:8px;"></div>
-    </div>
-</div>
+                <button class="cta-btn" onclick="showCheckoutForm()">Checkout</button>
+                <div id="checkout-form" style="display:none; margin-top:24px; background:#232323; border-radius:16px; padding:24px 18px; max-width:340px; margin:auto;">
+                    <h3 style="margin-bottom:18px;">Checkout</h3>
+                    <form onsubmit="submitCheckout(event)">
+                        <input type="text" id="buyer-name" placeholder="Full name" required style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <input type="text" id="buyer-number" placeholder="Phone number (8 digits)" maxlength="8" required pattern="\d{8}" style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <input type="email" id="buyer-email" placeholder="Email address" required style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <input type="text" id="buyer-address" placeholder="Full address" required style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <button type="submit" class="cta-btn" style="margin-top:12px;width:100%;">Confirm Order</button>
+                    </form>
+                    <div id="checkout-error" style="color:#fe3130;margin-top:8px;"></div>
+                </div>
+            </div>
         </section>
     </main>
-    <footer>
-        <p>&copy; 2025 the vision</p>
+    <footer class="footer">
+        <div class="footer-links">
+            <div>
+                <h3>Support</h3>
+                <a href="#">FAQ</a> |
+                <a href="#">Contact</a>
+            </div>
+            <div>
+                <h3>Boring Stuff</h3>
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Terms & Conditions</a>
+            </div>
+            <div>
+                <h3>Follow Us</h3>
+                <a href="https://www.tiktok.com/@thevision.tn" target="_blank" rel="noopener">TikTok</a> |
+                <a href="https://www.instagram.com/thevision.tn/" target="_blank" rel="noopener">Instagram</a>
+            </div>
+        </div>
+        <div class="footer-copy">&copy; 2025 THE VISION. All rights reserved.</div>
     </footer>
     <script>
 function renderCart() {
@@ -50,27 +163,28 @@ function renderCart() {
     let html = '<ul style="list-style:none;padding:0;">';
     cart.forEach((item, idx) => {
         total += Number(item.price);
-        html += `<li style="margin-bottom:16px;">
-            <strong>${item.name}</strong> - ${item.price} TND
-            <br>
-            <img src="${item.img}" alt="${item.name}" style="width:120px;">
-            <br>
-            <button class="cta-btn" onclick="removeFromCart(${idx})" style="margin-top:8px;">Remove</button>
+        html += `<li style="margin-bottom:24px;">
+            <div style="background:#232323;border-radius:14px;box-shadow:0 2px 12px #0002;padding:18px;display:flex;align-items:center;gap:18px;">
+                <img src="${item.img}" alt="${item.name}" style="width:90px;border-radius:10px;">
+                <div style="flex:1;">
+                    <strong style="font-size:1.08em;">${item.name}</strong><br>
+                    <span style="color:#e8491d;font-weight:700;">${item.price} TND</span>
+                </div>
+                <button class="cta-btn" onclick="removeFromCart(${idx})" style="margin-top:8px;">Remove</button>
+            </div>
         </li>`;
     });
     html += '</ul>';
     html += `<div style="font-size:1.2em;font-weight:600;margin-top:24px;color:#ffffff;">Total: ${total} TND</div>`;
     container.innerHTML = html;
 }
-
 function removeFromCart(index) {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCart();
 }
-
-        renderCart();
+renderCart();
     </script>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>

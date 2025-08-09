@@ -233,3 +233,147 @@ async function renderOrders() {
     }
     ordersList.innerHTML = html;
 }
+
+// Cinematic zoom on product card click (shop page)
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.product-card-clean a, .lookbook-scroll a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const card = this.closest('.product-card-clean') || this.closest('.lookbook-scroll > *');
+            if (card) {
+                card.style.transition = 'transform 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.5s';
+                card.style.transform = 'scale(1.12) translateY(-12px)';
+                card.style.boxShadow = '0 16px 48px #0008';
+                setTimeout(() => {
+                    window.location.href = this.getAttribute('href');
+                }, 320);
+                e.preventDefault();
+            }
+        });
+    });
+});
+
+// Section title fade-in on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const titles = document.querySelectorAll('.section-title-fade');
+    function onScroll() {
+        titles.forEach(title => {
+            const rect = title.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 60) {
+                title.classList.add('visible');
+            }
+        });
+    }
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+});
+
+// Page transition effect
+(function() {
+    if (!document.getElementById('transition-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.id = 'transition-overlay';
+        document.body.appendChild(overlay);
+    }
+    function fadeTo(url) {
+        const overlay = document.getElementById('transition-overlay');
+        overlay.classList.add('active');
+        setTimeout(() => { window.location.href = url; }, 400);
+    }
+    // Attach to all .header-back-btn and .hero-cart-link a
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.header-back-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const url = this.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                if (url) {
+                    e.preventDefault();
+                    fadeTo(url);
+                }
+            });
+        });
+        document.querySelectorAll('.hero-cart-link a').forEach(a => {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                fadeTo(this.getAttribute('href'));
+            });
+        });
+        // Also for .cta-btn links
+        document.querySelectorAll('a.cta-btn').forEach(a => {
+            a.addEventListener('click', function(e) {
+                if (this.getAttribute('href')) {
+                    e.preventDefault();
+                    fadeTo(this.getAttribute('href'));
+                }
+            });
+        });
+    });
+})();
+
+// Parallax effect for hero background
+document.addEventListener('DOMContentLoaded', function() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    hero.classList.add('parallax-bg');
+    function parallax(e) {
+        const x = (e.clientX || window.innerWidth/2) / window.innerWidth - 0.5;
+        const y = (e.clientY || window.innerHeight/2) / window.innerHeight - 0.5;
+        const mosaic = hero.querySelector('.header-mosaic-bg');
+        const video = hero.querySelector('#hero-video-bg');
+        const overlay = hero.querySelector('#hero-bg');
+        if (mosaic) mosaic.style.transform = `translate(${x*20}px,${y*10}px)`;
+        if (video) video.style.transform = `translate(${x*10}px,${y*5}px) scale(1.02)`;
+        if (overlay) overlay.style.transform = `translate(${x*8}px,${y*4}px)`;
+    }
+    hero.addEventListener('mousemove', parallax);
+    hero.addEventListener('touchmove', e => {
+        if (e.touches && e.touches[0]) parallax(e.touches[0]);
+    });
+    // Reset on mouse leave
+    hero.addEventListener('mouseleave', () => {
+        ['.header-mosaic-bg', '#hero-video-bg', '#hero-bg'].forEach(sel => {
+            const el = hero.querySelector(sel);
+            if (el) el.style.transform = '';
+        });
+    });
+});
+
+// Cinematic text reveal: add .visible to each span as it animates in
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.cinematic-reveal').forEach(el => {
+        const spans = el.querySelectorAll('span');
+        spans.forEach((span, i) => {
+            setTimeout(() => {
+                span.classList.add('visible');
+            }, 180 + i * 180);
+        });
+    });
+});
+
+// Animate product cards on scroll (for shop/lookbook)
+document.addEventListener('DOMContentLoaded', function() {
+    function animateCards() {
+        document.querySelectorAll('.product-card, .product-card-clean, .lookbook-scroll > *').forEach(card => {
+            const rect = card.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 60) {
+                card.style.animationPlayState = 'running';
+            }
+        });
+    }
+    window.addEventListener('scroll', animateCards);
+    animateCards();
+});
+
+// Fade-in effect for sections on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('section');
+    sections.forEach(sec => sec.classList.add('section-fade'));
+    function onScroll() {
+        sections.forEach(sec => {
+            const rect = sec.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 60) {
+                sec.classList.add('visible');
+            }
+        });
+    }
+    window.addEventListener('scroll', onScroll);
+    onScroll();
+});
