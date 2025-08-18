@@ -6,20 +6,6 @@
     <title>Shopping - THE VISION</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/fonts.css">
-    <meta name="description" content="Shop THE VISION streetwear. Cinematic, bold, mysterious. Not just a brand. A statement.">
-    <meta property="og:title" content="Shop - THE VISION">
-    <meta property="og:description" content="Browse and buy THE VISION streetwear. Wear your vision. Make your statement.">
-    <meta property="og:image" content="img/logo.png">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#000">
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
     <style>
         .product-list-clean {
             display: flex;
@@ -151,52 +137,26 @@
             align-items: center;
             justify-content: center;
         }
-        .hero {
-            position: relative;
-            min-height: 26vh;
-            /* was 38vh */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding-top: 18px;
-            padding-bottom: 10px;
-        }
-        .hero-logo {
-            width: 96px;
-            height: 96px;
-            margin-bottom: 4px;
-        }
-        .hero-title {
-            font-size: 1.1em;
-            margin-bottom: 4px;
-        }
         .hero-divider {
             width: 100vw;
-            height: 12px;
-            /* was 32px */
+            height: 48px;
             margin: 0;
             background: linear-gradient(180deg, rgba(24,24,24,0.01) 0%, #181818 100%);
             border: none;
             display: block;
         }
+        .main-section {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            padding: 64px 0 0 0;
+        }
+        @media (max-width: 900px) {
+            .main-section { padding-top: 32px; }
+        }
         @media (max-width: 600px) {
-            .hero {
-                min-height: 14vh;
-                padding-top: 8px;
-                padding-bottom: 4px;
-            }
-            .hero-logo {
-                width: 56px;
-                height: 56px;
-            }
-            .hero-title {
-                font-size: 0.85em;
-            }
-            .hero-divider {
-                height: 6px;
-            }
+            .main-section { padding-top: 18px; }
         }
         /* Parallax background for hero */
         .parallax-bg {
@@ -229,83 +189,25 @@
                 transform: translateY(0);
             }
         }
-        .product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 24px;
-            width: 100%;
-            margin-top: 16px;
-        }
-        .product-card {
-            background: #232323;
-            border-radius: 18px;
-            box-shadow: 0 2px 12px #0002;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            transition: transform 0.18s, box-shadow 0.18s;
-            position: relative;
-            overflow: hidden;
-        }
-        .product-card img {
-            width: 140px;
-            height: 140px;
-            object-fit: contain;
-            border-radius: 14px;
-            box-shadow: 0 2px 12px #0002;
-            margin-bottom: 16px;
-            transition: transform 0.18s;
-        }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 24px #0004;
-        }
-        .product-card:hover img {
-            transform: scale(1.05);
-        }
-        .product-title-black {
-            font-family: 'HOTHOM', Arial, sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-            margin: 0 0 8px 0;
-            text-align: center;
-        }
-        .price {
-            font-family: 'HORIZON', Arial, sans-serif;
-            font-size: 1rem;
-            color: #f5f5f5;
-            margin: 0 0 12px 0;
-            text-align: center;
-        }
-        .card-btn-area {
-            margin-top: 10px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
     </style>
 </head>
 <body>
-    <header class="hero parallax-bg" style="position:relative;min-height:26vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding-top:18px;padding-bottom:10px;">
+    <header class="hero parallax-bg" style="position:relative;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
         <div class="header-mosaic-bg">
             <!-- Copy all mosaic tiles from index.html here -->
             <!-- ...mosaic tiles... -->
         </div>
         <div class="hero-overlay"></div>
+        <a href="index.html" class="cta-btn" style="position:absolute;top:32px;left:32px;z-index:10;font-size:1.08em;padding:10px 28px;">
+            &#8592; Back to Home
+        </a>
+        <a href="cart.html" class="cta-btn" style="position:absolute;top:32px;right:32px;z-index:10;font-size:1.08em;padding:10px 28px;">
+            🛒 Cart
+            <span class="cart-count-badge" id="cart-count-badge"></span>
+        </a>
         <div class="hero-content">
-            <button class="header-back-btn" onclick="window.location.href='index.html'" aria-label="Back to Home">
-                <span class="back-btn-circle">Back</span>
-            </button>
             <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo">
             <h1 class="hero-title cinematic-reveal"><span>Shop</span></h1>
-            <div class="hero-cart-link">
-                <a href="cart.html" aria-label="Cart">
-                    <img src="img/cart.png" alt="Cart" class="cart-btn-img">
-                </a>
-            </div>
             <div class="hero-quote cinematic-reveal">
                 <span>"Wear your vision. Make your statement."</span>
             </div>
@@ -319,7 +221,7 @@
     <main>
         <section class="main-section section-fade">
             <h2 class="section-title-fade">Our Products</h2>
-            <div class="product-list" id="product-list">
+            <div class="lookbook-scroll" id="product-list">
                 <!-- Products will be rendered here -->
             </div>
         </section>
@@ -350,8 +252,10 @@
         const container = document.getElementById('product-list');
         container.innerHTML = '<p>Loading...</p>';
         let products = [];
+        let inventory = {};
         try {
             products = await fetchProducts();
+            inventory = await getInventory();
         } catch (e) {
             container.innerHTML = '<p>Failed to load products.</p>';
             return;
@@ -365,6 +269,7 @@
             let img, altImg = null;
             if (product.type === 'tshirt') {
                 img = 'img/front black.jpg';
+                // Try to find alternate image
                 if (product.images && product.images.length > 1) {
                     altImg = product.images[1].url;
                     if (!/^https?:\/\//.test(altImg) && !altImg.startsWith('img/')) {
@@ -385,12 +290,41 @@
                     img = 'img/' + img.replace(/^\.?\/*/, '');
                 }
             }
+            // Check if product has any stock
+            let hasStock = false;
+            if (product.type === 'tshirt') {
+                for (const style in inventory?.categories?.tshirt?.styles || {}) {
+                    for (const size in inventory?.categories?.tshirt?.styles[style] || {}) {
+                        if (inventory.categories.tshirt.styles[style][size] > 0) {
+                            hasStock = true;
+                            break;
+                        }
+                    }
+                    if (hasStock) break;
+                }
+            } else if (product.type === 'jort') {
+                for (const size in inventory?.categories?.jort || {}) {
+                    if (inventory.categories.jort[size] > 0) {
+                        hasStock = true;
+                        break;
+                    }
+                }
+            } else {
+                for (const size in inventory?.products?.[product.id] || {}) {
+                    if (inventory.products[product.id][size] > 0) {
+                        hasStock = true;
+                        break;
+                    }
+                }
+            }
+
             html += `
-                <div class="product-card" style="position:relative;overflow:hidden;">
+                <div class="product-card-clean" style="position:relative;overflow:hidden;">
                     <img src="${img}" alt="${product.name}" onerror="this.src='img/logo.png'" 
-                        ${altImg ? `onmouseover="this.src='${altImg}'" onmouseout="this.src='${img}'"` : ''} style="width:140px;height:140px;object-fit:contain;border-radius:14px;box-shadow:0 2px 12px #0002;margin-bottom:16px;">
-                    <div class="product-title-black">${product.name}</div>
-                    <div class="card-btn-area" style="margin-top:10px;">
+                        ${altImg ? `onmouseover="this.src='${altImg}'" onmouseout="this.src='${img}'"` : ''}>
+                    <h3>${product.name}</h3>
+                    ${!hasStock ? '<div style="color:#fe3130;font-size:0.9em;margin:-8px 0 8px 0;">Out of Stock</div>' : ''}
+                    <div class="card-btn-area">
                         <a href="product.html?id=${product.id}" class="cta-btn black-btn" style="padding:10px 22px;font-size:1em;">View</a>
                     </div>
                 </div>

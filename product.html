@@ -6,20 +6,6 @@
     <title>Product - THE VISION</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/fonts.css">
-    <meta name="description" content="View product details for THE VISION streetwear. Cinematic, bold, mysterious.">
-    <meta property="og:title" content="Product - THE VISION">
-    <meta property="og:description" content="Discover THE VISION product details. Wear your vision. Make your statement.">
-    <meta property="og:image" content="img/logo.png">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#000">
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
     <style>
         .product-main-wrap {
             display: flex;
@@ -186,52 +172,20 @@
             align-items: center;
             justify-content: center;
         }
-        .hero {
-            position: relative;
-            min-height: 26vh;
-            /* was 38vh */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding-top: 18px;
-            padding-bottom: 10px;
-        }
-        .hero-logo {
-            width: 96px;
-            height: 96px;
-            margin-bottom: 4px;
-        }
-        .hero-title {
-            font-size: 1.1em;
-            margin-bottom: 4px;
-        }
         .hero-divider {
             width: 100vw;
-            height: 12px;
-            /* was 32px */
+            height: 48px;
             margin: 0;
             background: linear-gradient(180deg, rgba(24,24,24,0.01) 0%, #181818 100%);
             border: none;
             display: block;
         }
-        @media (max-width: 600px) {
-            .hero {
-                min-height: 14vh;
-                padding-top: 8px;
-                padding-bottom: 4px;
-            }
-            .hero-logo {
-                width: 40px;
-                height: 40px;
-            }
-            .hero-title {
-                font-size: 0.85em;
-            }
-            .hero-divider {
-                height: 6px;
-            }
+        .main-section {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            padding: 64px 0 0 0;
         }
         @media (max-width: 1200px) {
             .product-main-wrap {
@@ -280,19 +234,20 @@
     </style>
 </head>
 <body>
-    <header class="hero" style="position:relative;min-height:26vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding-top:18px;padding-bottom:10px;">
+    <header class="hero" style="position:relative;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
         <div class="hero-overlay"></div>
+        <a href="shopping.html" class="cta-btn" style="position:absolute;top:32px;left:32px;z-index:10;font-size:1.08em;padding:10px 28px;">
+            &#8592; Back to Shop
+        </a>
+        <a href="cart.html" class="cta-btn" style="position:absolute;top:32px;right:32px;z-index:10;font-size:1.08em;padding:10px 28px;">
+            🛒 Cart
+                <span class="cart-count-badge" id="cart-count-badge"></span>
+            </a>
+        </div>
         <div class="hero-content">
-            <button class="header-back-btn" onclick="window.location.href='shopping.html'" aria-label="Back to Shop">
-                <span class="back-btn-circle">Back</span>
             </button>
             <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo">
             <h1 class="hero-title" id="product-title" style="display:none;">Product</h1>
-            <div class="hero-cart-link">
-                <a href="cart.html" aria-label="Cart">
-                    <img src="img/cart.png" alt="Cart" class="cart-btn-img">
-                </a>
-            </div>
             <div class="hero-quote">
                 "Every detail is a vision."
             </div>
@@ -340,10 +295,10 @@
     <script>
     async function renderProduct() {
         let products = [];
-        let stocks = {};
+        let inventory = {};
         try {
             products = await fetchProducts();
-            stocks = await fetchStocks();
+            inventory = await getInventory();
         } catch (e) {}
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
@@ -413,7 +368,7 @@
         // HTML
         let html = `
             <div class="product-img-area">
-                <img id="mainProductImg" src="${filteredImages[0]?.url || 'img/logo.png'}" alt="${filteredImages[0]?.name || ''}" style="box-shadow:0 8px 32px #0005;transition:box-shadow 0.2s;">
+                <img id="mainProductImg" src="${filteredImages[0]?.url || 'img/logo.png'}" alt="${filteredImages[0]?.name || ''}">
                 <div class="product-img-thumbs" id="product-img-thumbs">
                     ${filteredImages.map((imgObj, idx) => `
                         <img src="${imgObj.url}" alt="${imgObj.name}" class="product-img-thumb${idx === 0 ? ' selected' : ''}" data-idx="${idx}">
@@ -541,44 +496,46 @@
             });
         }
 
-        // Stock warning logic
+        // Update stock warning logic
         function updateWarning() {
-            let stock = null;
+            let stock = 0;
             if (product.type === 'tshirt' && selectedStyle && selectedSize) {
-                if (stocks.tshirt && stocks.tshirt[selectedStyle] && stocks.tshirt[selectedStyle][selectedSize] !== undefined) {
-                    stock = stocks.tshirt[selectedStyle][selectedSize];
-                } else if (product.stock && product.stock[selectedStyle] && product.stock[selectedStyle][selectedSize] !== undefined) {
-                    stock = product.stock[selectedStyle][selectedSize];
-                }
-            } else if (product.type === 'jort' && stocks.jort && selectedSize) {
-                if (stocks.jort[selectedSize] !== undefined) {
-                    stock = stocks.jort[selectedSize];
-                }
-            } else if (product.stock && selectedSize) {
-                stock = product.stock[selectedSize];
+                stock = inventory?.categories?.tshirt?.styles?.[selectedStyle]?.[selectedSize] || 0;
+            } else if (product.type === 'jort' && selectedSize) {
+                stock = inventory?.categories?.jort?.[selectedSize] || 0;
+            } else if (selectedSize) {
+                stock = inventory?.products?.[product.id]?.[selectedSize] || 0;
             }
-            if (stock === null) stock = 0;
-            document.getElementById('stock-warning').textContent = stock === 0 ? 'Out of stock' : (stock <= 30 ? 'Last pieces!' : '');
+
+            const warning = document.getElementById('stock-warning');
+            if (stock === 0) {
+                warning.textContent = 'Out of stock';
+            } else if (stock <= 30) {
+                warning.textContent = 'Last pieces!';
+            } else {
+                warning.textContent = '';
+            }
         }
         updateWarning();
 
-        // Buy button logic
+        // Update buy button logic
         document.getElementById('buy-btn').onclick = async function() {
-            let stock = null;
-            if (product.type === 'tshirt' && selectedStyle && selectedSize) {
-                if (stocks.tshirt && stocks.tshirt[selectedStyle] && stocks.tshirt[selectedStyle][selectedSize] !== undefined) {
-                    stock = stocks.tshirt[selectedStyle][selectedSize];
-                } else if (product.stock && product.stock[selectedStyle] && product.stock[selectedStyle][selectedSize] !== undefined) {
-                    stock = product.stock[selectedStyle][selectedSize];
-                }
-            } else if (product.type === 'jort' && stocks.jort && selectedSize) {
-                if (stocks.jort[selectedSize] !== undefined) {
-                    stock = stocks.jort[selectedSize];
-                }
-            } else if (product.stock && selectedSize) {
-                stock = product.stock[selectedSize];
+            // Refresh inventory before purchase
+            try {
+                inventory = await getInventory();
+            } catch (e) {
+                console.error('Failed to refresh inventory:', e);
             }
-            if (stock === null) stock = 0;
+            
+            let stock = 0;
+            if (product.type === 'tshirt' && selectedStyle && selectedSize) {
+                stock = inventory?.categories?.tshirt?.styles?.[selectedStyle]?.[selectedSize] || 0;
+            } else if (product.type === 'jort' && selectedSize) {
+                stock = inventory?.categories?.jort?.[selectedSize] || 0;
+            } else if (selectedSize) {
+                stock = inventory?.products?.[product.id]?.[selectedSize] || 0;
+            }
+
             if (stock <= 0) {
                 alert('Out of stock!');
                 return;
@@ -588,6 +545,7 @@
                 price: product.price,
                 img: (filteredImages[currentImgIdx]?.url || 'img/logo.png'),
                 type: product.type,
+                id: product.id,
                 style: selectedStyle,
                 size: selectedSize
             };
@@ -614,14 +572,15 @@
             let html = `<h2 style="font-family:'HORIZON',Arial,sans-serif;font-size:1.3em;font-weight:800;letter-spacing:0.05em;margin-bottom:18px;color:#fff;text-align:left;">You may also be interested in</h2>`;
             html += `<div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:flex-start;">`;
             picks.forEach(p => {
+                // Pick an image
                 let img = (p.images && p.images[0] && p.images[0].url) ? p.images[0].url : 'img/logo.png';
                 if (!/^https?:\/\//.test(img) && !img.startsWith('img/')) {
                     img = 'img/' + img.replace(/^\.?\/*/, '');
                 }
                 html += `
-                <div style="background:#232323;border-radius:16px;box-shadow:0 8px 32px #0005;padding:18px 14px;min-width:180px;max-width:220px;flex:1 1 180px;display:flex;flex-direction:column;align-items:center;">
+                <div style="background:#232323;border-radius:16px;box-shadow:0 2px 12px #0002;padding:18px 14px;min-width:180px;max-width:220px;flex:1 1 180px;display:flex;flex-direction:column;align-items:center;">
                     <a href="product.html?id=${p.id}" style="text-decoration:none;color:inherit;">
-                        <img src="${img}" alt="${p.name}" style="width:90px;height:90px;object-fit:contain;border-radius:10px;margin-bottom:10px;background:#fff;box-shadow:0 2px 12px #0002;">
+                        <img src="${img}" alt="${p.name}" style="width:90px;height:90px;object-fit:contain;border-radius:10px;margin-bottom:10px;background:#fff;">
                         <div style="font-family:'HOTHOM',Arial,sans-serif;font-size:1.08em;font-weight:700;text-align:center;margin-bottom:6px;color:#fff;">${p.name}</div>
                         <div style="color:#e8491d;font-weight:700;font-size:1em;text-align:center;">${p.price} TND</div>
                     </a>
@@ -639,4 +598,15 @@
     </script>
 </body>
 </html>
+            });
+            html += `</div>`;
+            document.getElementById('related-products-section').innerHTML = html;
+        }
+
+        renderRelatedProducts();
+        // --- End Related Products Section ---
+    }
+    document.addEventListener('DOMContentLoaded', renderProduct);
+    </script>
+</body>
 </html>

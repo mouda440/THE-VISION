@@ -6,125 +6,40 @@
     <title>Your Cart - THE VISION</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/fonts.css">
-    <meta name="description" content="Your cart at THE VISION. Review and checkout your streetwear selections.">
-    <meta property="og:title" content="Cart - THE VISION">
-    <meta property="og:description" content="Review your cart and checkout THE VISION streetwear.">
-    <meta property="og:image" content="img/logo.png">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#000">
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
-    <style>
-        .hero {
-            position: relative;
-            min-height: 26vh;
-            /* was 38vh */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding-top: 18px;
-            padding-bottom: 10px;
-            z-index: 10;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .hero-logo {
-            width: 96px;
-            height: 96px;
-            margin-bottom: 4px;
-        }
-        .hero-title {
-            font-size: 1.1em;
-            margin-bottom: 4px;
-        }
-        .header-mosaic-bg {
-            /* Add your mosaic background styles here if needed */
-        }
-        .hero-overlay {
-            /* Add overlay styles if not in styles.css */
-        }
-        .hero-divider {
-            width: 100vw;
-            height: 12px;
-            /* was 32px */
-            margin: 0;
-            background: linear-gradient(180deg, rgba(24,24,24,0.01) 0%, #181818 100%);
-            border: none;
-            display: block;
-        }
-        @media (max-width: 600px) {
-            .hero {
-                min-height: 14vh;
-                padding-top: 8px;
-                padding-bottom: 4px;
-            }
-            .hero-logo {
-                width: 56px;
-                height: 56px;
-            }
-            .hero-title {
-                font-size: 0.85em;
-            }
-            .hero-divider {
-                height: 6px;
-            }
-        }
-        .main-section {
-            padding-top: 0 !important;
-        }
-    </style>
 </head>
 <body>
-    <header class="hero parallax-bg">
+    <header class="hero parallax-bg" style="position:relative;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
         <div class="header-mosaic-bg">
             <!-- Copy all mosaic tiles from index.html here -->
             <!-- ...mosaic tiles... -->
         </div>
         <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <button class="header-back-btn" onclick="window.location.href='shopping.html'" aria-label="Back to Shop">
-                <span class="back-btn-circle">Back</span>
-            </button>
-            <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo">
-            <h1 class="hero-title cinematic-reveal"><span>Your Cart</span></h1>
-            <div class="hero-cart-link">
-                </a>
-            </div>
-            <div class="hero-quote cinematic-reveal">
+        <a href="shopping.html" class="cta-btn" style="position:absolute;top:32px;left:32px;z-index:10;font-size:1.08em;padding:10px 28px;">
+            &#8592; Back to Shop
+        </a>
+        <div class="hero-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;">
+            <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo" style="margin:24px 0 12px 0;">
+            <h1 class="hero-title cinematic-reveal" style="margin-bottom:12px;"><span>Your Cart</span></h1>
+            <div class="hero-quote cinematic-reveal" style="margin-bottom:0;">
                 <span>"Every vision starts with a choice."</span>
             </div>
         </div>
         <div class="hero-divider"></div>
     </header>
     <main>
-        <section class="main-section section-fade" style="padding-top:0;">
+        <section class="main-section section-fade">
             <h2 class="section-title-fade">Items in your cart</h2>
-            <div id="cart-items" style="max-width:700px;margin:0 auto;"></div>
+            <div id="cart-items"></div>
             <div id="checkout-area" style="text-align:center; margin-top:32px;">
                 <button class="cta-btn" onclick="showCheckoutForm()">Checkout</button>
-                <div id="checkout-form" style="display:none; margin-top:24px; background:#232323; border-radius:16px; padding:24px 18px; max-width:340px; margin:auto;">
-                    <h3 style="margin-bottom:18px;">Checkout</h3>
+                <div id="checkout-form" style="display:none; margin-top:24px;">
+                    <h3>Checkout</h3>
                     <form onsubmit="submitCheckout(event)">
-                        <input type="text" id="buyer-name" placeholder="Full name" required style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-                        <input type="text" id="buyer-number" placeholder="Phone number (8 digits)" maxlength="8" required pattern="\d{8}" style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-                        <input type="email" id="buyer-email" placeholder="Email address" required style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-                        <input type="text" id="buyer-address" placeholder="Full address" required style="margin-bottom:12px;display:block;width:100%;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
-                        <button type="submit" class="cta-btn" style="margin-top:12px;width:100%;">Confirm Order</button>
+                        <input type="text" id="buyer-name" placeholder="Full name" required style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <input type="text" id="buyer-number" placeholder="Phone number (8 digits)" maxlength="8" required pattern="\d{8}" style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <input type="email" id="buyer-email" placeholder="Email address" required style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <input type="text" id="buyer-address" placeholder="Full address" required style="margin-bottom:12px;display:block;width:260px;margin:auto;padding:10px;border-radius:8px;border:1px solid #444;background:#181818;color:#fff;">
+                        <button type="submit" class="cta-btn" style="margin-top:12px;">Confirm Order</button>
                     </form>
                     <div id="checkout-error" style="color:#fe3130;margin-top:8px;"></div>
                 </div>
@@ -152,40 +67,194 @@
         <div class="footer-copy">&copy; 2025 THE VISION. All rights reserved.</div>
     </footer>
     <script>
-function renderCart() {
+async function submitCheckout(event) {
+    event.preventDefault();
+    const name = document.getElementById('buyer-name').value.trim();
+    const number = document.getElementById('buyer-number').value.trim();
+    const email = document.getElementById('buyer-email').value.trim();
+    const address = document.getElementById('buyer-address').value.trim();
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const container = document.getElementById('cart-items');
+    const errorDiv = document.getElementById('checkout-error');
+    errorDiv.textContent = '';
+
     if (cart.length === 0) {
-        container.innerHTML = '<p>Your cart is empty.</p>';
+        errorDiv.textContent = 'Your cart is empty.';
         return;
     }
+
+    // Validate stock availability before checkout
+    try {
+        const inventory = await getInventory();
+        
+        // Check each item's stock
+        for (const item of cart) {
+            let available = 0;
+            
+            if (item.type === 'tshirt') {
+                available = inventory?.categories?.tshirt?.styles?.[item.style]?.[item.size] || 0;
+            } else if (item.type === 'jort') {
+                available = inventory?.categories?.jort?.[item.size] || 0;
+            } else {
+                // Try to find product ID if not present
+                let productId = item.id;
+                if (!productId) {
+                    const products = await fetchProducts();
+                    const baseName = item.name.split(' (')[0];
+                    const product = products.find(p => p.name === baseName);
+                    productId = product?.id;
+                }
+                available = inventory?.products?.[productId]?.[item.size] || 0;
+            }
+            
+            if (available <= 0) {
+                errorDiv.textContent = `Sorry, ${item.name} is out of stock.`;
+                return;
+            }
+        }
+
+        // Process the order
+        const order = {
+            cart,
+            name,
+            number,
+            email,
+            address,
+            date: new Date().toISOString()
+        };
+
+        const result = await addOrderAPI(order);
+        
+        if (result.success) {
+            localStorage.removeItem('cart');
+            document.getElementById('cart-items').innerHTML = '<p style="font-size:1.15em;color:#2d89ef;text-align:center;margin:32px 0;">Thank you for your order!<br>Your vision is on its way.</p>';
+            document.getElementById('checkout-area').style.display = 'none';
+        } else {
+            errorDiv.textContent = result.error || 'Failed to place order.';
+        }
+
+    } catch (err) {
+        errorDiv.textContent = 'Failed to process order. Please try again.';
+        console.error(err);
+    }
+}
+
+// Update the cart display to show stock status
+async function renderCart() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const container = document.getElementById('cart-items');
+    
+    if (cart.length === 0) {
+        container.innerHTML = '<p style="font-size:1.15em;color:#fe3130;text-align:center;margin:32px 0;">Your cart is empty.</p>';
+        return;
+    }
+
+    // Fetch current inventory
+    let inventory;
+    try {
+        inventory = await getInventory();
+    } catch (e) {
+        console.error('Failed to fetch inventory:', e);
+    }
+
     let total = 0;
-    let html = '<ul style="list-style:none;padding:0;">';
-    cart.forEach((item, idx) => {
+    let html = `<div class="cart-list" style="display:flex;flex-direction:column;gap:24px;">`;
+    
+    for (let idx = 0; idx < cart.length; idx++) {
+        const item = cart[idx];
         total += Number(item.price);
-        html += `<li style="margin-bottom:24px;">
-            <div style="background:#232323;border-radius:14px;box-shadow:0 2px 12px #0002;padding:18px;display:flex;align-items:center;gap:18px;">
-                <img src="${item.img}" alt="${item.name}" style="width:90px;border-radius:10px;">
-                <div style="flex:1;">
-                    <strong style="font-size:1.08em;">${item.name}</strong><br>
-                    <span style="color:#e8491d;font-weight:700;">${item.price} TND</span>
-                </div>
-                <button class="cta-btn" onclick="removeFromCart(${idx})" style="margin-top:8px;">Remove</button>
+
+        // Check stock status
+        let inStock = true;
+        let stockQty = 0;
+
+        if (inventory) {
+            if (item.type === 'tshirt') {
+                stockQty = inventory?.categories?.tshirt?.styles?.[item.style]?.[item.size] || 0;
+            } else if (item.type === 'jort') {
+                stockQty = inventory?.categories?.jort?.[item.size] || 0;
+            } else {
+                stockQty = inventory?.products?.[item.id]?.[item.size] || 0;
+            }
+            inStock = stockQty > 0;
+        }
+
+        html += `
+        <div class="cart-item-card" style="
+            display:flex;align-items:center;gap:24px;
+            background:#232323;border-radius:18px;box-shadow:0 2px 12px #0002;
+            padding:18px 24px;min-width:0;max-width:700px;margin:0 auto;
+            flex-wrap:wrap;
+            ${!inStock ? 'opacity:0.7;' : ''}
+        ">
+            <img src="${item.img}" alt="${item.name}" style="width:90px;height:90px;object-fit:contain;border-radius:12px;background:#fff;box-shadow:0 2px 8px #0001;">
+            <div style="flex:1;min-width:120px;">
+                <div style="font-family:'HOTHOM',Arial,sans-serif;font-size:1.13em;font-weight:700;color:#fff;margin-bottom:6px;">${item.name}</div>
+                <div style="color:#e8491d;font-weight:700;font-size:1.08em;margin-bottom:4px;">${item.price} TND</div>
+                ${item.style ? `<div style="font-size:0.98em;color:#aaa;">Style: <span style="color:#fff;">${item.style}</span></div>` : ''}
+                ${item.size ? `<div style="font-size:0.98em;color:#aaa;">Size: <span style="color:#fff;">${item.size}</span></div>` : ''}
+                ${!inStock ? `<div style="color:#fe3130;font-size:0.9em;margin-top:8px;">Out of Stock</div>` : ''}
             </div>
-        </li>`;
-    });
-    html += '</ul>';
-    html += `<div style="font-size:1.2em;font-weight:600;margin-top:24px;color:#ffffff;">Total: ${total} TND</div>`;
+            <button class="cta-btn" onclick="removeFromCart(${idx})" style="background:#fe3130;color:#fff;padding:10px 18px;font-size:1em;border-radius:999px;margin-left:auto;">Remove</button>
+        </div>`;
+    }
+
+    html += `</div>`;
+    html += `
+    <div class="cart-total-summary" style="
+        background:#181818;border-radius:14px;box-shadow:0 2px 12px #0002;
+        padding:18px 24px;margin:32px auto 0 auto;max-width:400px;
+        font-size:1.25em;font-weight:700;color:#fff;letter-spacing:0.04em;text-align:center;
+    ">
+        Total: <span style="color:#e8491d;">${total} TND</span>
+    </div>`;
+    
     container.innerHTML = html;
 }
+
 function removeFromCart(index) {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCart();
 }
+
+// --- Add this function for checkout ---
+function showCheckoutForm() {
+    document.getElementById('checkout-form').style.display = 'block';
+}
+
+function updateCartCountBadge() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const badge = document.getElementById('cart-count-badge');
+    if (badge) {
+        badge.textContent = cart.length > 0 ? cart.length : '';
+        badge.style.display = cart.length > 0 ? 'inline-block' : 'none';
+    }
+}
 renderCart();
-    </script>
+updateCartCountBadge();
+</script>
+<style>
+/* Responsive cart UI */
+@media (max-width: 700px) {
+    .cart-item-card {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+        padding: 14px 8vw !important;
+        max-width: 98vw !important;
+    }
+    .cart-item-card img {
+        width: 70px !important;
+        height: 70px !important;
+    }
+    .cart-total-summary {
+        padding: 14px 8vw !important;
+        font-size: 1.08em !important;
+        max-width: 98vw !important;
+    }
+}
+</style>
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 </body>

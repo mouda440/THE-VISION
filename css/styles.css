@@ -66,11 +66,21 @@ img {
 .cart-btn-img {
     width: 40px;
     height: 40px;
-    filter: brightness(1.2);
-    transition: filter 0.2s;
+    /* Remove filter for full color visibility */
+    filter: none;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px #0002;
+    padding: 4px;
+    /* Optionally, add a border for more contrast */
+    border: 2px solid #fe3130;
+    /* Ensure it's not transparent */
+    opacity: 1;
+    transition: box-shadow 0.2s, background 0.2s;
 }
 .cart-btn-img:hover {
-    filter: brightness(2);
+    box-shadow: 0 4px 16px #fe3130;
+    background: #ffeaea;
 }
 .header-back-btn {
     position: absolute;
@@ -79,73 +89,21 @@ img {
     background: none;
     border: none;
     cursor: pointer;
-    z-index: 10;
-    padding: 0;
-    transition: transform 0.13s cubic-bezier(.4,0,.2,1);
-    outline: none;
-    display: flex;
-    align-items: center;
 }
 .back-btn-circle {
     font-family: 'HORIZON', Arial, sans-serif;
     font-size: 1.1rem;
     background: #232323;
     color: #fff;
-    border-radius: 999px;
-    padding: 12px 38px 12px 44px;
-    border: 2.5px solid #fff;
-    box-shadow: 0 2px 12px #0003, 0 1.5px 0 #fff2 inset;
-    transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.18s, transform 0.13s;
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 900;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    user-select: none;
-    overflow: hidden;
+    border-radius: 22px;
+    padding: 12px 28px;
+    border: 2px solid #fff;
+    transition: background 0.2s, color 0.2s;
 }
-.back-btn-circle::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    background: url('data:image/svg+xml;utf8,<svg fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15 19l-7-7 7-7"/></svg>') center center/contain no-repeat;
-    filter: drop-shadow(0 1px 0 #0006);
-    vertical-align: middle;
-    transition: filter 0.18s;
-}
-.header-back-btn:hover .back-btn-circle,
-.header-back-btn:focus .back-btn-circle {
+.header-back-btn:hover .back-btn-circle {
     background: #fff;
     color: #e8491d;
     border-color: #e8491d;
-    box-shadow: 0 4px 24px #fe313033, 0 1.5px 0 #e8491d22 inset;
-    transform: translateY(-2px) scale(1.04);
-}
-.header-back-btn:active .back-btn-circle {
-    background: #e8491d;
-    color: #fff;
-    border-color: #e8491d;
-    box-shadow: 0 1px 4px #0005;
-    transform: scale(0.98);
-}
-@media (max-width: 600px) {
-    .header-back-btn {
-        top: 12px;
-        left: 10px;
-    }
-    .back-btn-circle {
-        font-size: 0.98rem;
-        padding: 8px 22px 8px 28px;
-    }
-    .back-btn-circle::before {
-        width: 14px;
-        height: 14px;
-        margin-right: 7px;
-    }
 }
 
 /* --- Main content --- */

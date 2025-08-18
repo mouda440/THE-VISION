@@ -6,20 +6,7 @@
     <title>About – THE VISION</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/fonts.css">
-    <meta name="description" content="Learn about THE VISION. Not just a brand. A statement.">
-    <meta property="og:title" content="About - THE VISION">
-    <meta property="og:description" content="Discover the story and mission behind THE VISION streetwear.">
-    <meta property="og:image" content="img/logo.png">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#000">
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <meta name="description" content="The Vision is not just a brand. It’s a statement. A reminder that seeing is believing, but believing comes first.">
     <style>
         .about-main-section {
             max-width: 700px;
@@ -104,56 +91,6 @@
             letter-spacing: 0.09em;
             font-style: italic;
         }
-        .hero {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .header-mosaic-bg {
-            /* Add your mosaic background styles here if needed */
-        }
-        .hero-overlay {
-            /* Add overlay styles if not in styles.css */
-        }
-        .hero-divider {
-            width: 100vw;
-            height: 48px;
-            margin: 0;
-            background: linear-gradient(180deg, rgba(24,24,24,0.01) 0%, #181818 100%);
-            border: none;
-            display: block;
-        }
-        .hero-scroll-down {
-            margin-top: 48px;
-            text-align: center;
-            color: #fff;
-            opacity: 0.7;
-            font-size: 1.2em;
-            letter-spacing: 0.13em;
-            animation: fadeIn 2.2s cubic-bezier(.4,0,.2,1);
-            z-index: 2;
-        }
-        .hero-scroll-down svg {
-            display: block;
-            margin: 0 auto;
-            animation: bounceDown 1.5s infinite alternate;
-        }
-        @keyframes bounceDown {
-            to { transform: translateY(12px);}
-        }
         @media (max-width: 600px) {
             .about-main-section { font-size: 1em; padding-top: 28px; }
             .about-lead { font-size: 1.08em; }
@@ -161,33 +98,27 @@
     </style>
 </head>
 <body>
-    <header class="hero parallax-bg">
+    <header class="hero parallax-bg" style="position:relative;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;">
         <div class="header-mosaic-bg">
             <!-- Copy all mosaic tiles from index.html here -->
             <!-- ...mosaic tiles... -->
         </div>
         <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <button class="header-back-btn" onclick="window.location.href='index.html'" aria-label="Back to Home">
-                <span class="back-btn-circle">Back</span>
-            </button>
-            <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo">
-            <h1 class="hero-title cinematic-reveal"><span>About</span></h1>
-            <div class="hero-quote cinematic-reveal">
+        <a href="index.html" class="cta-btn" style="position:absolute;top:32px;left:32px;z-index:10;font-size:1.08em;padding:10px 28px;">
+            &#8592; Back to Home
+        </a>
+        <div class="hero-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;">
+            <img src="img/logo.png" alt="THE VISION Logo" class="hero-logo" style="margin:24px 0 12px 0;">
+            <h1 class="hero-title cinematic-reveal" style="margin-bottom:12px;"><span>About</span></h1>
+            <div class="hero-quote cinematic-reveal" style="margin-bottom:0;">
                 <span>"The Vision is not just a brand. It’s a statement."</span>
-            </div>
-            <!-- Scroll to explore (copied from index.html) -->
-            <div class="hero-scroll-down">
-                <span>Scroll to see more</span>
-                <svg width="32" height="32" fill="none" stroke="#fff" stroke-width="2"><path d="M16 8v16M8 20l8 8 8-8"/></svg>
             </div>
         </div>
         <div class="hero-divider"></div>
     </header>
     <main>
-        <section class="main-section section-fade" style="padding-top:48px;">
+        <section class="main-section section-fade">
             <h2 class="section-title-fade">Who We Are</h2>
-            <div class="about-lead cinematic-reveal">THE VISION IS MORE THAN A BRAND.<br><span class="about-highlight">IT'S A STATEMENT.</span></div>
             <div style="font-size:1.18em;line-height:1.7;color:#e0e0e0;text-align:center;max-width:650px;margin:0 auto 24px auto;">
                 The Vision is a streetwear brand<br>
                 <span style="color:#fe3130;font-weight:700;">Scratch that. That’s not it.</span>
@@ -197,27 +128,13 @@
                 In life, sports, entrepreneurship, art… whatever your eyes see for you.<br><br>
                 Athletes, entrepreneurs, artists… whether you're young, old, career-driven, or just starting out.
             </div>
-            <div class="timeline" style="margin-top:36px;">
-                <div class="timeline-event">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">Founded in 2024 to empower creators and dreamers.</div>
-                </div>
-                <div class="timeline-event">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">First drop sold out. The vision spreads.</div>
-                </div>
-                <div class="timeline-event">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">Community grows: athletes, artists, entrepreneurs join the movement.</div>
-                </div>
-            </div>
             <div class="about-conclusion" style="margin-top:36px;">
                 In conclusion:<br>
                 The Vision is made for you.<br><br>
                 And our objective?<br>
                 To get more and more visions.
             </div>
-            <div class="about-signature">— THE VISION TEAM</div>
+        </section>
         </section>
     </main>
     <footer class="footer">
@@ -242,5 +159,30 @@
     </footer>
     <script src="js/main.js"></script>
     <script src="js/api.js"></script>
+</body>
+</html>
+        </div>
+    </script>
+</body>
+</html>
+            </div>
+            <div>
+            </div>
+        </div>
+    </footer>
+    <script>
+    // Parallax effect for about image (if you want to keep it, but no image now)
+    document.addEventListener('mousemove', function(e) {
+        const img = document.getElementById('about-parallax-img');
+        if (!img) return;
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 10;
+        img.style.transform = `translate(${x}px,${y}px) scale(1.03)`;
+    });
+    document.addEventListener('mouseleave', function() {
+        const img = document.getElementById('about-parallax-img');
+        if (img) img.style.transform = '';
+    });
+    </script>
 </body>
 </html>
