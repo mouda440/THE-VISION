@@ -1,18 +1,26 @@
 // API utility for backend integration
 const API_BASE = 'https://back-end-vision.onrender.com/api';
 
-// Stocks
+// Stocks functions are now deprecated - use inventory functions instead
 async function fetchStocks() {
-    const res = await fetch(`${API_BASE}/stocks`);
-    return await res.json();
+    const inventory = await getInventory();
+    // Convert inventory to old stocks format for compatibility
+    return {
+        tshirt: inventory?.categories?.tshirt?.styles || {},
+        jort: inventory?.categories?.jort || {}
+    };
 }
+
 async function setStocksAPI(stocks) {
-    const res = await fetch(`${API_BASE}/stocks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(stocks)
-    });
-    return await res.json();
+    // Convert old stocks format to inventory format
+    const inventory = {
+        categories: {
+            tshirt: { styles: stocks.tshirt || {} },
+            jort: stocks.jort || {}
+        },
+        products: {}
+    };
+    return await setInventory(inventory);
 }
 
 // Orders
@@ -131,6 +139,15 @@ async function bulkUpdateInventory(inventory) {
     return await res.json();
 }
 
+async function setInventory(inventory) {
+    const res = await fetch(`${API_BASE}/inventory/bulk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inventory)
+    });
+    return await res.json();
+}
+
 // Expose API functions to window for global access
 window.fetchStocks = fetchStocks;
 window.setStocksAPI = setStocksAPI;
@@ -144,3 +161,19 @@ window.getInventory = getInventory;
 window.updateProductStock = updateProductStock;
 window.checkStock = checkStock;
 window.bulkUpdateInventory = bulkUpdateInventory;
+window.setInventory = setInventory;
+window.updateProductStock = updateProductStock;
+window.checkStock = checkStock;
+window.bulkUpdateInventory = bulkUpdateInventory;
+
+// For admin endpoints, add basic auth if needed:
+// Example:
+// async function deleteProductAPI(id) {
+//     const res = await fetch(`${API_BASE}/admin/products/${id}`, {
+//         method: 'DELETE',
+//         headers: {
+//             'Authorization': 'Basic ' + btoa('admin:securepassword')
+//         }
+//     });
+//     return await res.json();
+// }

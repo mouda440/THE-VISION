@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart - THE VISION</title>
+    <title>Hope to see you again🤗</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/fonts.css">
 </head>
@@ -95,15 +95,7 @@ async function submitCheckout(event) {
             } else if (item.type === 'jort') {
                 available = inventory?.categories?.jort?.[item.size] || 0;
             } else {
-                // Try to find product ID if not present
-                let productId = item.id;
-                if (!productId) {
-                    const products = await fetchProducts();
-                    const baseName = item.name.split(' (')[0];
-                    const product = products.find(p => p.name === baseName);
-                    productId = product?.id;
-                }
-                available = inventory?.products?.[productId]?.[item.size] || 0;
+                available = inventory?.products?.[item.id]?.[item.size] || 0;
             }
             
             if (available <= 0) {

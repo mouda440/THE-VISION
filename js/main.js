@@ -3,9 +3,9 @@
 
 // Example for T-shirt
 async function addToCart() {
-    // Fetch latest products and stocks
+    // Fetch latest inventory
+    const inventory = await getInventory();
     const products = await fetchProducts();
-    const stocks = await fetchStocks();
 
     if (document.querySelector('h1')?.textContent.includes('T-shirt')) {
         const color = document.getElementById('color').value;
@@ -18,13 +18,9 @@ async function addToCart() {
         const tshirtProduct = products.find(p => p.type === 'tshirt');
         const price = tshirtProduct?.price ?? 120;
 
-        // Stock check (support both backend and product stock structure)
-        let stock = 0;
-        if (stocks.tshirt?.[style]?.[size] !== undefined) {
-            stock = stocks.tshirt[style][size];
-        } else if (tshirtProduct?.stock?.[size] !== undefined) {
-            stock = tshirtProduct.stock[size];
-        }
+        // Update stock check to use inventory
+        const stock = inventory?.categories?.tshirt?.styles?.[style]?.[size] ?? 0;
+        
         if (stock <= 0) {
             alert('Out of stock!');
             return;
@@ -35,7 +31,6 @@ async function addToCart() {
             price: price,
             img: img,
             type: 'tshirt',
-            id: tshirtProduct?.id,
             style,
             size
         };
@@ -50,13 +45,9 @@ async function addToCart() {
         const jortProduct = products.find(p => p.type === 'jort');
         const price = jortProduct?.price ?? 70;
 
-        // Stock check
-        let stock = 0;
-        if (stocks.jort?.[size] !== undefined) {
-            stock = stocks.jort[size];
-        } else if (jortProduct?.stock?.[size] !== undefined) {
-            stock = jortProduct.stock[size];
-        }
+        // Update stock check to use inventory
+        const stock = inventory?.categories?.jort?.[size] ?? 0;
+        
         if (stock <= 0) {
             alert('Out of stock!');
             return;
@@ -67,7 +58,6 @@ async function addToCart() {
             price: price,
             img: 'img/jort back.jpg',
             type: 'jort',
-            id: jortProduct?.id,
             size
         };
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -81,7 +71,6 @@ function showCheckoutForm() {
     document.getElementById('checkout-form').style.display = 'block';
 }
 
-window.submitCheckout = submitCheckout;
 async function submitCheckout(event) {
     event.preventDefault();
     const name = document.getElementById('buyer-name').value.trim();
@@ -123,7 +112,7 @@ async function submitCheckout(event) {
         }
     });
 
-    // Validate stock for all types
+    // Validate inventory for all types
     let stockError = false;
     // T-shirt
     for (const style in cartCount.tshirt) {
@@ -186,6 +175,30 @@ async function submitCheckout(event) {
         date: new Date().toISOString()
     };
 
+    // --- DECREMENT STOCKS FOR ALL PRODUCT TYPES ---
+    // Update inventory locally before sending to backend
+    // T-shirt
+    for (const style in cartCount.tshirt) {
+        for (const size in cartCount.tshirt[style]) {
+            inventory.categories.tshirt.styles[style][size] -= cartCount.tshirt[style][size];
+            if (inventory.categories.tshirt.styles[style][size] < 0) inventory.categories.tshirt.styles[style][size] = 0;
+        }
+    }
+    // Jort
+    for (const size in cartCount.jort) {
+        inventory.categories.jort[size] -= cartCount.jort[size];
+        if (inventory.categories.jort[size] < 0) inventory.categories.jort[size] = 0;
+    }
+    // Other products
+    for (const prodId in cartCount.other) {
+        for (const size in cartCount.other[prodId]) {
+            if (!inventory.products[prodId]) inventory.products[prodId] = {};
+            inventory.products[prodId][size] = (inventory.products[prodId][size] ?? 0) - cartCount.other[prodId][size];
+            if (inventory.products[prodId][size] < 0) inventory.products[prodId][size] = 0;
+        }
+    }
+    await setInventory(inventory);
+
     // Save order info
     try {
         await addOrderAPI(order);
@@ -202,7 +215,38 @@ async function submitCheckout(event) {
     setTimeout(() => {
         document.getElementById('checkout-form').style.display = 'none';
         if (typeof renderCart === 'function') renderCart();
+        if (typeof renderOrders === 'function') renderOrders();
     }, 1500);
+}
+
+window.renderOrders = renderOrders;
+async function renderOrders() {
+    const orders = await fetchOrders();
+    let totalArticles = 0;
+    orders.forEach(order => {
+        if (Array.isArray(order.cart)) {
+            totalArticles += order.cart.length;
+        }
+    });
+    const ordersList = document.getElementById('orders-list');
+    let html = `<div class="orders-total" style="font-weight:700;font-size:1.3em;margin-bottom:18px;color:#e8491d;">Total articles: ${totalArticles}</div>`;
+    if (orders.length === 0) {
+        html += '<p>No orders yet.</p>';
+    } else {
+        orders.forEach((order, idx) => {
+            html += `<div class="order-card" style="background:#181818;padding:18px 16px;margin-bottom:12px;border-radius:9px;">
+                <strong>Order #${idx + 1}</strong> <span style="color:#888;font-size:0.9em;">(${new Date(order.date).toLocaleString()})</span><br>
+                <span style="font-weight:500;">${order.name}</span> - ${order.number} - ${order.email}<br>
+                <span style="font-size:0.97em;">${order.address}</span><br>
+                <strong>Articles:</strong>
+                <ul style="margin:6px 0 0 0;padding-left:18px;">
+                    ${order.cart.map(item => `<li>${item.name} (${item.price} TND)</li>`).join('')}
+                </ul>
+                <button onclick="deleteOrder(${idx})" class="button" style="margin-top:8px;">Delete</button>
+            </div>`;
+        });
+    }
+    ordersList.innerHTML = html;
 }
 
 // Cinematic zoom on product card click (shop page)

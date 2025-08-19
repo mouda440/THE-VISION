@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product - THE VISION</title>
+    <title>This would look good on you</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/fonts.css">
     <style>
@@ -503,7 +503,7 @@
                 stock = inventory?.categories?.tshirt?.styles?.[selectedStyle]?.[selectedSize] || 0;
             } else if (product.type === 'jort' && selectedSize) {
                 stock = inventory?.categories?.jort?.[selectedSize] || 0;
-            } else if (selectedSize) {
+            } else {
                 stock = inventory?.products?.[product.id]?.[selectedSize] || 0;
             }
 
@@ -520,19 +520,12 @@
 
         // Update buy button logic
         document.getElementById('buy-btn').onclick = async function() {
-            // Refresh inventory before purchase
-            try {
-                inventory = await getInventory();
-            } catch (e) {
-                console.error('Failed to refresh inventory:', e);
-            }
-            
             let stock = 0;
             if (product.type === 'tshirt' && selectedStyle && selectedSize) {
                 stock = inventory?.categories?.tshirt?.styles?.[selectedStyle]?.[selectedSize] || 0;
             } else if (product.type === 'jort' && selectedSize) {
                 stock = inventory?.categories?.jort?.[selectedSize] || 0;
-            } else if (selectedSize) {
+            } else {
                 stock = inventory?.products?.[product.id]?.[selectedSize] || 0;
             }
 
@@ -545,7 +538,6 @@
                 price: product.price,
                 img: (filteredImages[currentImgIdx]?.url || 'img/logo.png'),
                 type: product.type,
-                id: product.id,
                 style: selectedStyle,
                 size: selectedSize
             };
